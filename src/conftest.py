@@ -4,7 +4,8 @@ import pytest
 @pytest.fixture
 def app():
     from src.app import app
-    return app 
+
+    return app
 
 
 @pytest.fixture
