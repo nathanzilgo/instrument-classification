@@ -1,2 +1,19 @@
 <!doctype html>
+<head>
 <title>Track classifier</title>
+<style>
+    img {
+        height: 100px;
+    }
+</style>
+</head>
+<body>
+{% for track in tracks %}
+<p>
+    {{ track.id }}
+    <img src='https://assets.storage.inda.band/{{ track.video_thumbnail_url }}' />
+    <input type='checkbox' {{ 'checked' if track.audio_imported }} />
+</p>
+<hr>
+{% endfor %}
+</body>
