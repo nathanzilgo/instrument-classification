@@ -12,3 +12,6 @@ lint:
 
 run:
 	flask --app src/app --debug run
+
+test:
+	pytest --disable-warnings
