@@ -1,0 +1,27 @@
+<!doctype html>
+<head>
+    <title>Track classifier</title>
+    <style>
+
+        table, th, td {
+        border: 1px solid black;
+        }
+
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+          <th>Instrument</th>
+          <th># Tracks</th>
+          <th>Duration (s)</th>
+        </tr>
+        {% for label in summary %}
+        <tr>
+          <td>{{ label.instrument }}</td>
+          <td>{{ label.count }}</td>
+          <td>{{ label.duration_in_sec }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+</body>

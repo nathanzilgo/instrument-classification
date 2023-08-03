@@ -2,14 +2,14 @@ from .track import TrackRepository
 from unittest import mock
 
 
-@mock.patch('src.repository.track.bigquery')
+@mock.patch('src.app.repository.track.bigquery')
 def test_find_imported_not_deleted_tracks(bigquery_mock):
     client_mock = mock.Mock()
     client_mock.query.return_value = [
-        ['id1', 'path1'],
-        ['id2', 'path2'],
-        ['id3', 'path3'],
-        ['id4', 'path4'],
+        ['id1', 'path1', 'path1'],
+        ['id2', 'path2', 'path1'],
+        ['id3', 'path3', 'path1'],
+        ['id4', 'path4', 'path1'],
     ]
 
     bigquery_mock.Client.return_value = client_mock

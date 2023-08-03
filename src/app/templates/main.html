@@ -1,0 +1,140 @@
+<!doctype html>
+<head>
+    <title>Track classifier</title>
+    <style>
+        img {
+            height: 100px;
+        }
+
+        select {
+            padding:0;
+            padding-left:1px;
+            border:none;
+            height: 19px;
+            white-space: normal;
+            display: block;
+        }
+
+        option {
+            width:100px;
+            border:1px solid #000;
+            margin-left:-1px;
+            display:inline-block;
+        }
+
+        option:checked {
+            background-color:#B4D5FF;
+        }
+
+    </style>
+</head>
+<body>
+    {% for track in tracks %}
+    <p>
+        {{ track.id }}
+    </p>
+    <div>
+        {% if track.video_url.endswith('mov') %}
+            <video 
+                width="280" height="500" controls id="video-{{ track.id }}" 
+                onplay="myonplay()" 
+                onseeking="myonseeking()" 
+                onpause="myonpause()"
+            >
+                <source src="{{ track.video_url }}" type="video/mp4">
+                <audio id="audio-video-{{ track.id }}" controls>
+                    <source src="{{ track.audio_url }}" type="audio/ogg"/>
+                </audio>
+            Your browser does not support the video tag.
+            </video>
+        {% else %}
+            <audio id="audio-video-{{ track.id }}" controls>
+                <source src="{{ track.audio_url }}" type="audio/ogg"/>
+            </audio>
+        {% endif %}
+
+        
+        <select name="instlabel" id="{{ track.id }}" multiple>
+            <option value="drums">Drums</option>
+            <option value="bass">Bass</option>
+            <option value="guitar">Guitar</option>
+            <option value="keyboards">Keyboards</option>
+            <option value="vocals">Vocals</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+    <hr>
+    {% endfor %}
+    <button onclick="submit()" id="subbutton">Submit</button>
+</body>
+<script>
+
+    function myonplay() {
+        var audiokey = "audio-" + window.event.srcElement.id
+        var myaudio = document.getElementById(audiokey);
+        myaudio.play();
+    }
+
+    function myonpause() {
+        var audiokey = "audio-" + window.event.srcElement.id
+        var myaudio = document.getElementById(audiokey);
+        myaudio.pause();
+    }
+
+    function myonseeking() {
+        var audiokey = "audio-" + window.event.srcElement.id
+        var myvideo = document.getElementById(window.event.srcElement.id);
+        var myaudio = document.getElementById(audiokey);
+        myaudio.currentTime = myvideo.currentTime;
+    }
+
+    function submit() {
+        var bt = document.getElementById("subbutton")
+        bt.textContent = 'Submitting...'
+        var x = document.getElementsByTagName("select")
+        var arr = [...x];
+        var labels_arr = arr.map(e => {
+            var key = e.id;
+            var value = Array.from(e.querySelectorAll("option:checked"),o=>o.value);;
+            return {track_id: key, label: value}
+        });
+
+        fetch("http://127.0.0.1:5000/label/",
+            {
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+                method: "POST",
+                body: JSON.stringify({labels: labels_arr})
+            })
+            .then(function(res){ 
+                alert('Done!')
+                window.location.reload() 
+            })
+            .catch(function(res){ 
+                console.log(res) 
+            })
+
+    }
+
+    window.onmousedown = function (e) {
+        var el = e.target;
+        if (el.tagName.toLowerCase() == 'option' && el.parentNode.hasAttribute('multiple')) {
+            e.preventDefault();
+
+            // toggle selection
+            if (el.hasAttribute('selected')) el.removeAttribute('selected');
+            else el.setAttribute('selected', '');
+
+            // hack to correct buggy behavior
+            var select = el.parentNode.cloneNode(true);
+            el.parentNode.parentNode.replaceChild(select, el.parentNode);
+        }
+    }
+
+    window.onbeforeunload = function () {
+        window.screenTop(0);
+    }
+
+</script>
