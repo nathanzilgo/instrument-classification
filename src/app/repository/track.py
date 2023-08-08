@@ -80,7 +80,7 @@ class TrackRepository:
         query = f"""
             SELECT t.id, t.video_url, t.audio_url
             FROM inda_api.tracks t, inda_api.users u
-            WHERE t.deleted_at is null and instrument='' and t.user_id=u.id and u.username = '{uname}' and audio_url!='' and id not in (
+            WHERE t.deleted_at is null and instrument='' and t.user_id=u.id and u.username = '{uname}' and audio_url!='' and t.id not in (
                 SELECT track_id FROM track_classification.track_labels
             )
             ORDER BY t.created_at desc
