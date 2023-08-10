@@ -9,17 +9,19 @@ class TrackRepository:
 
     def label_summary(self):
         query = """
-        SELECT
+        SELECT instrument, COUNT(track_id) AS count, SUM(duration_in_ms)/1000 AS duration_in_sec
+        FROM (
+        SELECT DISTINCT
             lb.label AS instrument,
-            COUNT(lb.track_id) AS count,
-            SUM(t.duration_in_milliseconds)/1000 AS duration_in_sec
+            lb.track_id,
+            t.duration_in_milliseconds AS duration_in_ms
         FROM
             track_classification.track_labels lb,
             inda_api.tracks t
         WHERE
-            lb.track_id = t.id
-        GROUP BY
-            label;
+            lb.track_id = t.audio_url
+        )
+        GROUP BY instrument;
         """
         client = bigquery.Client()
         query_job = client.query(query)
@@ -64,12 +66,11 @@ class TrackRepository:
     def find_imported_not_deleted_tracks(self):
 
         query = """
-            SELECT id, video_url, audio_url
+            SELECT DISTINCT audio_url AS track_id, video_url, audio_url
             FROM inda_api.tracks
-            WHERE deleted_at is null and created_at > '2023-04-20' and instrument='' and audio_url!='' and id not in (
+            WHERE deleted_at is null and created_at > '2023-04-20' and instrument='' and audio_url!='' and audio_url not in (
                 SELECT track_id FROM track_classification.track_labels
             )
-            ORDER BY created_at desc
             LIMIT 10
         """
 
@@ -78,12 +79,11 @@ class TrackRepository:
     def find_imported_not_deleted_tracks_by_user(self, uname):
 
         query = f"""
-            SELECT t.id, t.video_url, t.audio_url
+            SELECT DISTINCT t.audio_url AS track_id, t.video_url, t.audio_url
             FROM inda_api.tracks t, inda_api.users u
-            WHERE t.deleted_at is null and instrument='' and t.user_id=u.id and u.username = '{uname}' and audio_url!='' and t.id not in (
+            WHERE t.deleted_at is null and instrument='' and t.user_id=u.id and u.username = '{uname}' and t.audio_url!='' and t.audio_url not in (
                 SELECT track_id FROM track_classification.track_labels
             )
-            ORDER BY t.created_at desc
             LIMIT 10
         """
 
@@ -92,12 +92,11 @@ class TrackRepository:
     def find_imported_not_deleted_tracks_by_instrument(self, instrument):
 
         query = f"""
-            SELECT id, video_url, audio_url
+            SELECT audio_url AS track_id, video_url, audio_url
             FROM inda_api.tracks
-            WHERE deleted_at is null and created_at > '2023-04-20' and instrument='{instrument}' and audio_url!='' and id not in (
+            WHERE deleted_at is null and created_at > '2023-04-20' and instrument='{instrument}' and audio_url!='' and audio_url not in (
                 SELECT track_id FROM track_classification.track_labels
             )
-            ORDER BY created_at desc
             LIMIT 10
         """
 
