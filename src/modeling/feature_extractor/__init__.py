@@ -1,0 +1,3 @@
+from .spectral_audioflux_extractor import SpectralExtractor
+from .vggish_extractor import VGGExtractor
+from .mfcc_audioflux_extractor import MFCCExtractor

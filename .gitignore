@@ -157,3 +157,10 @@ cython_debug/
 
 # Audio outputs and sample tests:
 *.ogg
+
+# CSV files
+*.csv
+
+# VGGish model files
+*.ckpt
+*.npz
