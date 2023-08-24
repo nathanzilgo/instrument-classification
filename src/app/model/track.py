@@ -7,3 +7,4 @@ class Track(BaseModel):
     audio_url: str
     imported: bool
     audio_imported: bool = True
+    label: str = ''

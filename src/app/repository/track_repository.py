@@ -101,3 +101,32 @@ class TrackRepository:
         """
 
         return self.get_tracks_by_query(query)
+
+    def get_labelled_tracks_by_query(self, query):
+        client = bigquery.Client()
+
+        query_job = client.query(query)  # Make an API request.
+
+        tracks = []
+        for row in query_job:
+            tracks.append(
+                Track(
+                    id=row[0],
+                    audio_url=self.AUDIO_BASE_PATH + row[1]
+                    if 'https' not in row[1]
+                    else row[1],
+                    video_url='',
+                    label=row[2],
+                    imported=True,
+                )
+            )
+
+        return tracks
+
+    def find_labelled_tracks(self):
+
+        query = """
+                SELECT * from track_classification.track_labels_filtered;
+                """
+
+        return self.get_labelled_tracks_by_query(query)

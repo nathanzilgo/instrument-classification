@@ -15,3 +15,7 @@ run:
 
 test:
 	pytest --disable-warnings
+
+process:
+	pip install -e .
+	python src/audio_processing/process.py

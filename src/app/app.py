@@ -1,8 +1,13 @@
 from flask import Flask, render_template, request
+import logging
 
-from src.app.repository.track import TrackRepository
+from src.app.repository.track_repository import TrackRepository
+
 
 app = Flask(__name__)
+
+FORMAT = '%(asctime)s %(message)s'
+logging.basicConfig(format=FORMAT, level=logging.INFO)
 
 
 @app.route('/')

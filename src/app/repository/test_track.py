@@ -1,8 +1,8 @@
-from .track import TrackRepository
+from src.app.repository.track_repository import TrackRepository
 from unittest import mock
 
 
-@mock.patch('src.app.repository.track.bigquery')
+@mock.patch('src.app.repository.track_repository.bigquery')
 def test_find_imported_not_deleted_tracks(bigquery_mock):
     client_mock = mock.Mock()
     client_mock.query.return_value = [
