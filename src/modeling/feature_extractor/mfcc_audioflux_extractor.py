@@ -1,7 +1,10 @@
-from src.modeling.feature_extractor.feature_extractor import FeatureExtractor
 import audioflux as af
 import numpy as np
+
 from audioflux.type import SpectralFilterBankScaleType
+from typing import Dict, List
+
+from src.modeling.feature_extractor.feature_extractor import FeatureExtractor
 
 
 class MFCCExtractor(FeatureExtractor):
@@ -12,15 +15,13 @@ class MFCCExtractor(FeatureExtractor):
     @see https://audioflux.top/feature/xxcc.html
     """
 
-    def extract(
+    def _extract(
         self,
         file_path: str,
-        output_path: str,
-        output_separator: str = ',',
         slide_length: int = 1024,
         num_coefficients: int = 13,
         **kwargs,
-    ) -> any:
+    ) -> Dict[str, List[int | float]]:
         audio_arr, sr = af.read(file_path)
 
         radix2_exp = int(np.log2(slide_length) + 1)
@@ -38,6 +39,5 @@ class MFCCExtractor(FeatureExtractor):
         xxcc_result = {
             f'mfcc_{i:02d}': xxcc_result[i] for i in range(num_coefficients)
         }
-        super().write_features(
-            xxcc_result, file_path, output_path, output_separator
-        )
+
+        return xxcc_result

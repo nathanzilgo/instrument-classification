@@ -1,7 +1,10 @@
-from src.modeling.feature_extractor.feature_extractor import FeatureExtractor
 import audioflux as af
 import numpy as np
+
 from audioflux.type import SpectralFilterBankScaleType
+from typing import Dict, List
+
+from src.modeling.feature_extractor.feature_extractor import FeatureExtractor
 
 
 class SpectralExtractor(FeatureExtractor):
@@ -45,14 +48,9 @@ class SpectralExtractor(FeatureExtractor):
         'var',
     ]
 
-    def extract(
-        self,
-        file_path: str,
-        output_path: str,
-        output_separator: str = ',',
-        slide_length: int = 1024,
-        **kwargs
-    ) -> any:
+    def _extract(
+        self, file_path: str, slide_length: int = 1024, **kwargs
+    ) -> Dict[str, List[int | float]]:
         audio_arr, sr = af.read(file_path)
 
         radix2_exp = int(np.log2(slide_length) + 1)
@@ -76,6 +74,4 @@ class SpectralExtractor(FeatureExtractor):
                 spectral_result = spectral_result[0]
             extracted_features[feature] = spectral_result
 
-        super().write_features(
-            extracted_features, file_path, output_path, output_separator
-        )
+        return extracted_features

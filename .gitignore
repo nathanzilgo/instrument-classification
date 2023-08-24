@@ -164,3 +164,4 @@ cython_debug/
 # VGGish model files
 *.ckpt
 *.npz
+*.pb
