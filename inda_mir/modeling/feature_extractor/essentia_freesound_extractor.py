@@ -6,7 +6,9 @@ from typing import Dict, List
 
 from flatten_json import flatten
 
-from src.modeling.feature_extractor.feature_extractor import FeatureExtractor
+from inda_mir.modeling.feature_extractor.feature_extractor import (
+    FeatureExtractor,
+)
 
 
 class FreesoundExtractor(FeatureExtractor):
@@ -23,7 +25,6 @@ class FreesoundExtractor(FeatureExtractor):
         **kwargs,
     ) -> Dict[str, List[int | float]]:
         file = tempfile.NamedTemporaryFile()
-        print(file.name)
         os.system(
             f'essentia_streaming_extractor_freesound {file_path} {file.name}'
         )

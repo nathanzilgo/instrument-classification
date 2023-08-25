@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import logging
 
-from src.app.repository.track_repository import TrackRepository
+from track_classifier_app.repository.track_repository import TrackRepository
 
 
 app = Flask(__name__)

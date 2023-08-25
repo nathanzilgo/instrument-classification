@@ -2,8 +2,10 @@ import audioflux as af
 
 from typing import Dict, List
 
-from src.modeling.feature_extractor.feature_extractor import FeatureExtractor
-from src.utils.vggish import waveform_to_features
+from inda_mir.modeling.feature_extractor.feature_extractor import (
+    FeatureExtractor,
+)
+from inda_mir.utils.vggish import waveform_to_features
 
 
 class VGGExtractor(FeatureExtractor):

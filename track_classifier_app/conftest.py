@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture
 def app():
-    from src.app.app import app
+    from track_classifier_app.app import app
 
     return app
 

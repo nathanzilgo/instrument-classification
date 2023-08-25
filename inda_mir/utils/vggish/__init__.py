@@ -9,6 +9,7 @@ import hashlib
 import tf_slim
 
 from urllib.request import urlretrieve
+from inda_mir.utils.logger import logger
 
 
 def md5_file(fname):
@@ -69,7 +70,7 @@ PCA_PARAMS = pkg_resources.resource_filename(
 
 for fname in MODEL_PARAMS, PCA_PARAMS:
     if not os.path.exists(fname):
-        print('Model data not found, dowloading it...')
+        logger.info('Model data not found, dowloading it...')
         urlretrieve(
             'https://storage.googleapis.com/audioset/vggish_model.ckpt',
             MODEL_PARAMS,
@@ -78,7 +79,7 @@ for fname in MODEL_PARAMS, PCA_PARAMS:
             'https://storage.googleapis.com/audioset/vggish_pca_params.npz',
             PCA_PARAMS,
         )
-        print('Download completed')
+        logger.info('Download completed')
 
     fbase = os.path.basename(fname)
     if md5_file(fname) != MD5_CHECKSUMS[fbase]:

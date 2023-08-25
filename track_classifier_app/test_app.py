@@ -1,10 +1,12 @@
 from unittest import mock
 
-from src.app.model.track import Track
+from track_classifier_app.model.track import Track
 
 
 def test_home(client):
-    with mock.patch('src.app.app.TrackRepository') as track_repository_mock:
+    with mock.patch(
+        'track_classifier_app.app.TrackRepository'
+    ) as track_repository_mock:
         track_repository_instance_mock = mock.Mock()
         track_repository_instance_mock.find_imported_not_deleted_tracks.return_value = [
             Track(

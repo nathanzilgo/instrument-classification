@@ -1,4 +1,4 @@
-from src.app.model.track import Track
+from track_classifier_app.model.track import Track
 from google.cloud import bigquery
 
 
@@ -122,11 +122,3 @@ class TrackRepository:
             )
 
         return tracks
-
-    def find_labelled_tracks(self):
-
-        query = """
-                SELECT * from track_classification.track_labels_filtered;
-                """
-
-        return self.get_labelled_tracks_by_query(query)

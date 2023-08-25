@@ -1,21 +1,20 @@
 format:
-	python -m blue ./src
+	python -m blue ./inda_mir ./scripts ./track_classifier_app
 
 check.format:
-	python -m blue ./src --check
+	python -m blue ./inda_mir ./scripts ./track_classifier_app --check
 
 install:
-	pip install -r requirements.txt
+	pip install -e .
 
 lint:
-	python -m pyflakes ./src
+	python -m pyflakes ./inda_mir ./scripts ./track_classifier_app
 
 run:
-	flask --app src/app/app --debug run
+	flask --app track_classifier_app/app --debug run
 
 test:
 	pytest --disable-warnings
 
 process:
-	pip install -e .
-	python src/audio_processing/process.py
+	python scripts/remove_track_silence_and_sample.py

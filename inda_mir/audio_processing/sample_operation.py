@@ -1,6 +1,6 @@
-from src.audio_processing.audio_operation import AudioOperation
+from inda_mir.audio_processing.audio_operation import AudioOperation
+from inda_mir.utils.logger import logger
 from pydub import AudioSegment  # type: ignore
-import os
 
 
 class SampleOperation(AudioOperation):
@@ -29,7 +29,6 @@ class SampleOperation(AudioOperation):
         """
 
         track = AudioSegment.from_file(audio_path, format=input_format)
-        os.makedirs('./output', exist_ok=True)
 
         for i in range(0, len(track), sample_duration):
             if len(track) > i + sample_duration or keep_trace:
@@ -38,4 +37,4 @@ class SampleOperation(AudioOperation):
                     format=output_format,
                 )
             else:
-                print(f'Skipping {len(track) - i} trace at {i}')
+                logger.info(f'Skipping {len(track) - i} trace at {i}')

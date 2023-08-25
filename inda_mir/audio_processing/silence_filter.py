@@ -1,15 +1,12 @@
-from src.audio_processing.audio_operation import AudioOperation
+from inda_mir.audio_processing.audio_operation import AudioOperation
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
-import os
-
-from src.io.local_file import LocalFile
 
 
 class SilenceFilter(AudioOperation):
     @staticmethod
     def apply(
-        track: LocalFile,
+        audio_path: str,
         input_format: str = None,
         output_format: str = 'ogg',
         output_path: str = './output',
@@ -32,7 +29,7 @@ class SilenceFilter(AudioOperation):
         Returns:
             str: The path to the output audio file.
         """
-        track = AudioSegment.from_file(track.path, format=input_format)
+        track = AudioSegment.from_file(audio_path, format=input_format)
         audio_chunks = split_on_silence(
             track,
             min_silence_len=min_silence_len,
@@ -40,7 +37,6 @@ class SilenceFilter(AudioOperation):
             keep_silence=keep_silence,
         )
         combined = sum(audio_chunks)
-        os.makedirs('./output', exist_ok=True)
 
         if combined is None or combined == 0:
             return ''

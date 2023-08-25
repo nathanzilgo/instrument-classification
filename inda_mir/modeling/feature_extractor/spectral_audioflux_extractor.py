@@ -4,7 +4,9 @@ import numpy as np
 from audioflux.type import SpectralFilterBankScaleType
 from typing import Dict, List
 
-from src.modeling.feature_extractor.feature_extractor import FeatureExtractor
+from inda_mir.modeling.feature_extractor.feature_extractor import (
+    FeatureExtractor,
+)
 
 
 class SpectralExtractor(FeatureExtractor):
