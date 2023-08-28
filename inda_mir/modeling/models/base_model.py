@@ -2,7 +2,7 @@ import numpy as np
 from abc import ABC, abstractmethod
 
 
-class IRModel(ABC):
+class BaseModel(ABC):
     @abstractmethod
     def fit(self, X: np.array, Y: np.array, **kwargs) -> None:
         ...
@@ -13,4 +13,8 @@ class IRModel(ABC):
 
     @abstractmethod
     def predict_proba(self, X: np.array, **kwargs) -> np.array:
+        ...
+
+    @abstractmethod
+    def get_feature_importance(self, **kwargs) -> np.array:
         ...
