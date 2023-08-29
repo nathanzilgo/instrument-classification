@@ -18,6 +18,7 @@ OUTPUT_DIR_SAMPLE = os.path.join(OUTPUT_DIR, 'sampled')
 OUTPUT_DIR_METADATA = os.path.join(OUTPUT_DIR, 'metadata')
 OUTPUT_FORMAT = 'ogg'
 SAMPLE_DURATION = 10000
+AUDIO_BASE_PATH = 'https://uploads.storage.inda.band/'
 
 os.makedirs(OUTPUT_DIR)
 os.makedirs(OUTPUT_DIR_RAW)
@@ -38,10 +39,15 @@ for row in query_job:
     try:
         logger.info(f'Processing track {track.id}')
 
+        if 'http' in track.audio_url:
+            audio_url = track.audio_url
+        else:
+            audio_url = AUDIO_BASE_PATH + track.audio_url
+
         audio_url_format = track.audio_url.split('.')[-1]
         filename = track.id + '.' + audio_url_format
         downloaded_path, _ = urlretrieve(
-            track.audio_url, os.path.join(OUTPUT_DIR_RAW, filename)
+            audio_url, os.path.join(OUTPUT_DIR_RAW, filename)
         )
 
         output_filename = os.path.join(OUTPUT_DIR_SILENCE, track.id)
