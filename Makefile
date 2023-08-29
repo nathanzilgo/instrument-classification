@@ -16,6 +16,9 @@ run:
 test:
 	pytest --disable-warnings
 
+extract:
+	python scripts/feature_extraction.py
+
 process:
 	make delete.output
 	python scripts/track_data_cleanse.py
