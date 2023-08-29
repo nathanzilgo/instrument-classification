@@ -41,7 +41,10 @@ class SilenceFilter(AudioOperation):
         if combined is None or combined == 0:
             return ''
 
-        return combined.export(
-            f'{output_path}_rm_silence.{output_format}',
+        filename = f'{output_path}_rm_silence.{output_format}'
+        combined.export(
+            filename,
             format=output_format,
         )
+
+        return filename

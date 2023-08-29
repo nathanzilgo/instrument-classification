@@ -1,11 +1,13 @@
 import os
 from typing import NamedTuple
 from urllib.request import urlretrieve
+import pandas as pd
 
 from google.cloud import bigquery
 
 from inda_mir.audio_processing import SampleOperation, SilenceFilter
 from inda_mir.utils.logger import logger
+
 
 Track = NamedTuple('Track', id=str, audio_url=str, label=str)
 
@@ -13,6 +15,7 @@ OUTPUT_DIR = './output-inda'
 OUTPUT_DIR_RAW = os.path.join(OUTPUT_DIR, 'raw')
 OUTPUT_DIR_SILENCE = os.path.join(OUTPUT_DIR, 'silenced')
 OUTPUT_DIR_SAMPLE = os.path.join(OUTPUT_DIR, 'sampled')
+OUTPUT_DIR_METADATA = os.path.join(OUTPUT_DIR, 'metadata')
 OUTPUT_FORMAT = 'ogg'
 SAMPLE_DURATION = 10000
 
@@ -20,6 +23,7 @@ os.makedirs(OUTPUT_DIR)
 os.makedirs(OUTPUT_DIR_RAW)
 os.makedirs(OUTPUT_DIR_SAMPLE)
 os.makedirs(OUTPUT_DIR_SILENCE)
+os.makedirs(OUTPUT_DIR_METADATA)
 
 client = bigquery.Client()
 query_job = client.query(
@@ -27,6 +31,8 @@ query_job = client.query(
 )  # Make an API request.
 
 tracks = []
+metadata = []
+
 for row in query_job:
     track = Track._make(row)
     try:
@@ -55,8 +61,25 @@ for row in query_job:
             output_filename,
         )
 
+        metadata.append(
+            {
+                'track_id': track.id,
+                'raw_path': downloaded_path,
+                'sampled_path': track_sample_dir,
+                'silenced_path': output_silence_path,
+                'label': track.label,
+            }
+        )
+
         logger.info(
             f'Success on track {track.id}, samples saved at {track_sample_dir}'
         )
-    except:
-        logger.error(f'Error on track {track.id}')
+    except Exception as e:
+        logger.error(f'Error on track {track.id}, {e}')
+
+df = pd.DataFrame.from_records(metadata, index=range(0, len(metadata)))
+df.to_csv(
+    f'{OUTPUT_DIR_METADATA}/metadata.csv',
+    index=True,
+    lineterminator='\n',
+)

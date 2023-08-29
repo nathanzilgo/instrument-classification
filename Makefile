@@ -17,4 +17,11 @@ test:
 	pytest --disable-warnings
 
 process:
-	python scripts/remove_track_silence_and_sample.py
+	make delete.output
+	python scripts/track_data_cleanse.py
+
+delete.output:
+	rm -rf ./output-inda
+
+delete.raw:
+	rm -rf ./output-inda/raw
