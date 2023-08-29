@@ -61,15 +61,14 @@ for row in query_job:
             output_filename,
         )
 
-        metadata.append(
-            {
-                'track_id': track.id,
-                'raw_path': downloaded_path,
-                'sampled_path': track_sample_dir,
-                'silenced_path': output_silence_path,
-                'label': track.label,
-            }
-        )
+        for sample_path in os.scandir(track_sample_dir):
+            metadata.append(
+                {
+                    'track_id': track.id,
+                    'sample_path': sample_path.path,
+                    'label': track.label,
+                }
+            )
 
         logger.info(
             f'Success on track {track.id}, samples saved at {track_sample_dir}'
@@ -80,6 +79,6 @@ for row in query_job:
 df = pd.DataFrame.from_records(metadata, index=range(0, len(metadata)))
 df.to_csv(
     f'{OUTPUT_DIR_METADATA}/metadata.csv',
-    index=True,
+    index=False,
     lineterminator='\n',
 )

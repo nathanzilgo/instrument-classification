@@ -14,9 +14,9 @@ class RandomTrainTestSplit(TrainTestSplitter):
 
         track_data = pd.merge(
             track_features,
-            track_metadata[['track_id', 'sampled_path', 'label']],
+            track_metadata[['track_id', 'sample_path', 'label']],
             left_on='filename',
-            right_on='sampled_path',
+            right_on='sample_path',
             how='left',
         )
 
