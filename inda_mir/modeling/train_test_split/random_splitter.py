@@ -1,4 +1,10 @@
 import pandas as pd
+import numpy as np
+import numpy.typing as npt
+
+from sklearn.model_selection import train_test_split
+
+from typing import Tuple
 
 from inda_mir.modeling.train_test_split.splitter import TrainTestSplitter
 
@@ -8,9 +14,9 @@ class RandomTrainTestSplit(TrainTestSplitter):
         self,
         track_metadata: pd.DataFrame,
         track_features: pd.DataFrame,
-        frac: float,
+        train_size: float,
         random_state: int,
-    ) -> tuple:
+    ) -> Tuple[npt.ArrayLike]:
 
         track_data = pd.merge(
             track_features,
@@ -20,20 +26,28 @@ class RandomTrainTestSplit(TrainTestSplitter):
             how='left',
         )
 
-        train_tracks = track_metadata.sample(
-            frac=frac, random_state=random_state
-        )['track_id'].to_list()
-        train_index = track_data['track_id'].isin(train_tracks)
-        train_dataset = track_data[train_index]
-        test_dataset = track_data[~train_index]
+        train_tracks, test_tracks = train_test_split(
+            list(set(track_metadata['track_id'])),
+            train_size=train_size,
+            random_state=random_state,
+        )
+        train_dataset = track_data[track_data['track_id'].isin(train_tracks)]
+        test_dataset = track_data[track_data['track_id'].isin(test_tracks)]
 
         X_train, y_train = (
-            train_dataset.drop(['label'], axis=1).to_numpy(),
+            train_dataset.drop(
+                ['filename', 'frame', 'track_id', 'sample_path', 'label'],
+                axis=1,
+            ).to_numpy(),
             train_dataset['label'].to_numpy(),
         )
         X_test, y_test = (
-            test_dataset.drop(['label'], axis=1).to_numpy(),
+            test_dataset.drop(
+                ['filename', 'frame', 'track_id', 'sample_path', 'label'],
+                axis=1,
+            ).to_numpy(),
             test_dataset['label'].to_numpy(),
         )
+        labels = np.array(sorted(list(set(track_data['label']))))
 
-        return X_train, X_test, y_train, y_test
+        return X_train, X_test, y_train, y_test, labels

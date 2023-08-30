@@ -71,7 +71,7 @@ for row in query_job:
             metadata.append(
                 {
                     'track_id': track.id,
-                    'sample_path': sample_path.path,
+                    'sample_path': os.path.abspath(sample_path.path),
                     'label': track.label,
                 }
             )
