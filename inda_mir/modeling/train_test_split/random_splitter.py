@@ -1,22 +1,23 @@
 import pandas as pd
 import numpy as np
-import numpy.typing as npt
 
 from sklearn.model_selection import train_test_split
 
-from typing import Tuple
+from typing import Tuple, List
 
 from inda_mir.modeling.train_test_split.splitter import TrainTestSplitter
 
 
 class RandomTrainTestSplit(TrainTestSplitter):
-    def split(
+    def _split(
         self,
         track_metadata: pd.DataFrame,
         track_features: pd.DataFrame,
         train_size: float,
         random_state: int,
-    ) -> Tuple[npt.ArrayLike]:
+    ) -> Tuple[
+        pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, List[str]
+    ]:
 
         track_data = pd.merge(
             track_features,
@@ -24,7 +25,7 @@ class RandomTrainTestSplit(TrainTestSplitter):
             left_on='filename',
             right_on='sample_path',
             how='left',
-        )
+        ).dropna()
 
         train_tracks, test_tracks = train_test_split(
             list(set(track_metadata['track_id'])),
@@ -36,17 +37,17 @@ class RandomTrainTestSplit(TrainTestSplitter):
 
         X_train, y_train = (
             train_dataset.drop(
-                ['filename', 'frame', 'track_id', 'sample_path', 'label'],
+                ['label'],
                 axis=1,
-            ).to_numpy(),
-            train_dataset['label'].to_numpy(),
+            ),
+            train_dataset['label'],
         )
         X_test, y_test = (
             test_dataset.drop(
-                ['filename', 'frame', 'track_id', 'sample_path', 'label'],
+                ['label'],
                 axis=1,
-            ).to_numpy(),
-            test_dataset['label'].to_numpy(),
+            ),
+            test_dataset['label'],
         )
         labels = np.array(sorted(list(set(track_data['label']))))
 

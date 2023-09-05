@@ -165,3 +165,7 @@ cython_debug/
 *.ckpt
 *.npz
 *.pb
+
+# Saved models
+models/*.pkl
+models/*.json

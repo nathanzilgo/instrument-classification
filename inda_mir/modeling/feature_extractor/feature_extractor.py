@@ -31,7 +31,7 @@ class FeatureExtractor(ABC):
 
     def features_to_df(
         self, features: Dict[str, List[int | float]], file_path: str, agg=False
-    ):
+    ) -> pd.DataFrame:
         df = pd.DataFrame.from_dict(features, orient='index').reset_index()
         df = df.melt(id_vars=['index'], var_name='frame')
         df = df.pivot_table(
