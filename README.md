@@ -4,9 +4,13 @@ web app to help in the manual track classification
 
 ## Table of Contents
 
-* [Installation](#installation)
-* [Usage](#usage)
-* [Testing](#testing)
+- [track\_classifier](#track_classifier)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Labeling](#labeling)
+    - [Testing](#testing)
+    - [Preprocess, feature extraction and model training](#preprocess-feature-extraction-and-model-training)
 
 ## Installation
 
@@ -25,7 +29,7 @@ source .venv/bin/activate
 3. Install the dependencies
 
 ```shell
-pip install -r requirements.txt
+make install
 ```
 
 4. Setup [Google Application Default Credentials](https://cloud.google.com/docs/authentication/application-default-credentials?hl=pt-br)
@@ -34,7 +38,14 @@ pip install -r requirements.txt
 gcloud auth application-default login
 ```
 
+5. For model training and evaluation usage on MacOS:
+````shell
+
+````
+
 ## Usage
+
+### Labeling
 
 1. Run the application
 
@@ -58,10 +69,38 @@ make run
  - 'http://127.0.0.1:5000/user/[username]' to see tracks of a single user.
  - 'http://127.0.0.1:5000/instrument/[instrument]' to see tracks originated by the track separation feature for a single instrument.
 
-## Testing
+### Testing
 
 1. Run the tests
 
 ```shell
 pytest
+```
+
+### Preprocess, feature extraction and model training
+
+1. Remove silence from tracks and make samples of 10 seconds
+   
+
+```shell
+make process
+```
+
+1. Feature extraction using Essentia
+   
+```shell
+make extract
+```
+
+3. For model training and evaluation, use notebooks/training_testing_models.ipynb
+
+4. If you plan on using LightGBM Classifier on macOS:
+
+```shell
+make lightgbm.mac
+```
+
+5. LightGBM on Linux
+```shell
+make lightgbm.linux
 ```

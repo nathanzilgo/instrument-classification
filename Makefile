@@ -23,11 +23,23 @@ upload:
 	python scripts/bucket_upload.py
 
 process:
-	make delete.output
+	make clean
 	python scripts/track_data_cleanse.py
 
-delete.output:
+clean:
 	rm -rf ./output-inda
 
-delete.raw:
+clean.raw:
 	rm -rf ./output-inda/raw
+
+lightgbm.mac:
+	brew install lightgbm
+	pip install lightgbm
+
+lightgbm.linux:
+	git clone --recursive https://github.com/microsoft/LightGBM
+	cd LightGBM
+	mkdir build
+	cd build
+	cmake ..
+	make -j4
