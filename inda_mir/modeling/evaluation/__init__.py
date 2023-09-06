@@ -1,9 +1,58 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import (
+    confusion_matrix,
+    classification_report,
+    accuracy_score,
+    recall_score,
+    precision_score,
+    f1_score,
+)
 
-from typing import Dict
+from typing import Dict, List
+
+from inda_mir.modeling.models import BaseModel
+from inda_mir.modeling.train_test_split import DatasetInterface
+
+
+def cross_val_score(model: BaseModel, folds: List[DatasetInterface]):
+
+    accuracy_scores = []
+    recall_scores = []
+    precision_scores = []
+    f1_scores = []
+    fimportance_scores = []
+
+    for data in folds:
+        X_train, y_train = data.get_numpy_train_data()
+        X_test, y_test = data.get_numpy_test_data()
+
+        model.fit(X_train, y_train)
+        pred = model.predict(X_test)
+
+        accuracy_scores.append(accuracy_score(y_test, pred))
+        recall_scores.append(recall_score(y_test, pred, average='weighted'))
+        precision_scores.append(
+            precision_score(y_test, pred, average='weighted')
+        )
+        f1_scores.append(f1_score(y_test, pred, average='weighted'))
+        try:
+            fimportance_scores.append(
+                model.get_feature_importance(data.get_features_names())
+            )
+        except:
+            pass
+
+    scores = {
+        'accuracy': accuracy_scores,
+        'recall': recall_scores,
+        'precision': precision_scores,
+        'f1': f1_scores,
+        'feature_importances': fimportance_scores,
+    }
+
+    return scores
 
 
 def plot_feature_importance(
