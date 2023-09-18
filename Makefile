@@ -1,5 +1,5 @@
 format:
-	python -m blue ./inda_mir ./scripts ./track_classifier_app
+	python -m blue ./inda_mir ./scripts ./track_classifier_app ./models_showcase
 
 check.format:
 	python -m blue ./inda_mir ./scripts ./track_classifier_app --check
@@ -12,6 +12,9 @@ lint:
 
 run:
 	flask --app track_classifier_app/app --debug run
+
+run.models_showcase:
+	flask --app models_showcase/app --debug run
 
 test:
 	pytest --disable-warnings

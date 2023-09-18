@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Models Showcase</title>
+</head>
+<body>
+    <h1>Models Showcase</h1>
+    <form method="POST" action="/spec">
+        <label for="model_name">Select a Model:</label>
+        <select id="model_name" name="model_name">
+            {% for model in model_files %}
+                <option value="{{ model }}">{{ model }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="View Parameters">
+    </form>
+
+    {% if selected_model %}
+    <h2>Model Parameters for {{ selected_model }}</h2>
+    <ul>
+        {% for key, value in params.items() %}
+            <li><strong>{{ key }}:</strong> {{ value }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

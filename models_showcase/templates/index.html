@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Models</title>
+</head>
+
+<body>
+    <h1>Test Models</h1>
+    <form method="POST" action="/" enctype="multipart/form-data">
+        <label for="audio_file">Upload Audio File:</label>
+        <input type="file" id="audio_file" name="audio_file" accept=".wav, .mp3" required>
+        <input type="submit" value="Apply Models" onclick="submit()">
+    </form>
+
+    {% if df is not none %}
+    <h2>Predicted Labels</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Predicted Label</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in df.iterrows() %}
+            <tr>
+                <td>{{ row['Model'] }}</td>
+                <td>{{ row['Predicted Label'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</body>
+<script>
+    function submit() {
+        audioFile = document.getElementById("audio_file").files[0]
+
+        fetch("http://127.0.0.1:5000/", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({ audio_file: audioFile })
+        })
+        .catch((error) => console.log(error))
+    }
+</script>
+
+</html>
