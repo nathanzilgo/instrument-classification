@@ -82,8 +82,10 @@ def plot_feature_importance(
     plt.show()
 
 
-def plot_confusion_matrix(y_true, y_pred, labels=None, perc=True) -> None:
-    cm = confusion_matrix(y_true, y_pred, labels=labels)
+def plot_confusion_matrix(y_true, X_test, model, perc=True) -> None:
+    y_pred = model.predict(X_test)
+    labels = model.classes_
+    cm = confusion_matrix(y_true, y_pred, labels=labels)[: len(labels) - 1]
 
     if perc:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
@@ -95,11 +97,11 @@ def plot_confusion_matrix(y_true, y_pred, labels=None, perc=True) -> None:
         fmt='.2%' if perc else 'd',
         cmap='Blues',
         xticklabels=labels,
-        yticklabels=labels,
+        yticklabels=labels[:-1],
     )
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
-    plt.title('Confusion Matrix')
+    plt.title(f'Confusion Matrix - {model.name}')
     plt.show()
 
 

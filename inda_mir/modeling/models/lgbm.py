@@ -9,12 +9,10 @@ class LightGBMClassifier(BaseModel):
     def __init__(self, **kwargs) -> None:
         super().__init__()
         self.model = ltb.LGBMClassifier(**kwargs)
+        self.name = 'LightGBM'
 
-    def fit(self, X: npt.NDArray, y: npt.NDArray) -> None:
+    def _fit(self, X: npt.NDArray, y: npt.NDArray) -> None:
         self.model = self.model.fit(X, y)
-
-    def predict(self, X: npt.NDArray) -> npt.NDArray:
-        return self.model.predict(X)
 
     def predict_proba(self, X: npt.NDArray) -> npt.NDArray:
         return self.model.predict_proba(X)

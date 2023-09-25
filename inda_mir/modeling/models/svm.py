@@ -8,13 +8,11 @@ from inda_mir.modeling.models.base_model import BaseModel
 class SVMClassifier(BaseModel):
     def __init__(self, **kwargs) -> None:
         super().__init__()
-        self.model = SVC(**kwargs)
+        self.model = SVC(probability=True, **kwargs)
+        self.name = 'SVM'
 
-    def fit(self, X: npt.NDArray, y: npt.NDArray) -> None:
+    def _fit(self, X: npt.NDArray, y: npt.NDArray) -> None:
         self.model = self.model.fit(X, y)
-
-    def predict(self, X: npt.NDArray) -> npt.NDArray:
-        return self.model.predict(X)
 
     def predict_proba(self, X: npt.NDArray) -> npt.NDArray:
         return self.model.predict_proba(X)
