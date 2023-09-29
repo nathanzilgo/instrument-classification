@@ -7,6 +7,7 @@
         }
 
         select {
+            margin-bottom: 4px;
             padding:0;
             padding-left:1px;
             border:none;
@@ -53,18 +54,21 @@
             </audio>
         {% endif %}
 
-        
-        <select name="instlabel" id="{{ track.id }}" multiple>
-            <option value="drums">Drums</option>
-            <option value="bass">Bass</option>
-            <option value="guitar">Guitar</option>
-            <option value="keyboards">Keyboards</option>
-            <option value="vocals">Vocals</option>
-            <option value="other">Other</option>
-            <option value="duplicated">Duplicated</option>
-            <option value="empty">Empty</option>
-            <option value="skip">Skip</option>
-        </select>
+        <div class="label-selection" id="{{ track.id }}">
+            <select name="instlabel" multiple>
+                <option value="drums">Drums</option>
+                <option value="bass">Bass</option>
+                <option value="guitar">Guitar</option>
+                <option value="keyboards">Keyboards</option>
+                <option value="vocals">Vocals</option>
+                <option value="other">Other</option>
+                <option value="duplicated">Duplicated</option>
+                <option value="empty">Empty</option>
+                <option value="skip">Skip</option>
+            </select>
+            <label for="input-other-label">Case other label:</label>
+            <input type="text" id="input-other-label">
+        </div>
     </div>
     <hr>
     {% endfor %}
@@ -94,14 +98,24 @@
     function submit() {
         var bt = document.getElementById("subbutton")
         bt.textContent = 'Submitting...'
-        var x = document.getElementsByTagName("select")
+        var x = document.getElementsByClassName("label-selection")
         var arr = [...x];
+        
         var labels_arr = arr.map(e => {
             var key = e.id;
-            var value = Array.from(e.querySelectorAll("option:checked"),o=>o.value);;
+            var selectionSession = e.querySelector("select");
+            var customLabelInput = e.querySelector("input");
+
+            var value;
+            if (customLabelInput.value.trim().length !== 0) {
+                value = Array.from(customLabelInput.value.toLocaleLowerCase);
+            } else {
+                value = Array.from(selectionSession.querySelectorAll("option:checked"),o=>o.value);
+            }
+            
             return {track_id: key, label: value}
         });
-
+        
         fetch("http://127.0.0.1:5000/label/",
             {
                 headers: {
