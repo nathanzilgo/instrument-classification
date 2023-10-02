@@ -9,7 +9,7 @@ OUTFILE = 'random_split'
 
 os.makedirs(OUTDIR, exist_ok=True)
 
-METADATA_PATH = './output-inda/metadata/metadata.csv'
+METADATA_PATH = './output-inda/metadata/metadata_sampled.csv'
 FEATURES_PATH = './output-inda/features_output/freesound_features.csv'
 
 metadata_df = pd.read_csv(METADATA_PATH)

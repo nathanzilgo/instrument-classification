@@ -80,14 +80,13 @@ pytest
 ### Preprocess, feature extraction and model training
 
 1. Remove silence from tracks and make samples of 10 seconds
-   
 
 ```shell
 make process
 ```
 
-1. Feature extraction using Essentia
-   
+2. Feature extraction using [Essentia](https://essentia.upf.edu/installing.html#compiling-essentia)
+
 ```shell
 make extract
 ```

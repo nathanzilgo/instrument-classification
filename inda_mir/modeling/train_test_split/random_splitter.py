@@ -21,19 +21,19 @@ class RandomTrainTestSplit(TrainTestSplitter):
 
         track_data = pd.merge(
             track_features,
-            track_metadata[['track_id', 'sample_path', 'label']],
+            track_metadata[['id', 'sample_path', 'label']],
             left_on='filename',
             right_on='sample_path',
             how='left',
         ).dropna()
 
         train_tracks, test_tracks = train_test_split(
-            list(set(track_metadata['track_id'])),
+            list(set(track_metadata['id'])),
             train_size=train_size,
             random_state=random_state,
         )
-        train_dataset = track_data[track_data['track_id'].isin(train_tracks)]
-        test_dataset = track_data[track_data['track_id'].isin(test_tracks)]
+        train_dataset = track_data[track_data['id'].isin(train_tracks)]
+        test_dataset = track_data[track_data['id'].isin(test_tracks)]
 
         X_train, y_train = (
             train_dataset.drop(

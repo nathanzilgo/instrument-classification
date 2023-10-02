@@ -169,3 +169,5 @@ cython_debug/
 # Saved models
 models/*.pkl
 models/*.json
+notebooks/random_split.data
+nohup.out

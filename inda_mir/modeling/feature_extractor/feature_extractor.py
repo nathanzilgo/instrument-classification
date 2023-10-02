@@ -3,6 +3,10 @@ import pandas as pd
 from abc import ABC, abstractmethod
 from typing import Dict, List
 
+from tqdm import tqdm
+
+from inda_mir.utils.logger import logger
+
 
 class FeatureExtractor(ABC):
     @abstractmethod
@@ -17,17 +21,29 @@ class FeatureExtractor(ABC):
         output_path: str,
         output_separator: str = ',',
         agg: bool = False,
-        **kwargs
+        **kwargs,
     ):
 
         file_features_df = []
-        for file in files:
-            features = self._extract(file, **kwargs)
-            df = self.features_to_df(features, file, agg)
-            file_features_df.append(df)
-
-        unified_df = pd.concat(file_features_df)
-        unified_df.to_csv(output_path, sep=output_separator, index=False)
+        for file in tqdm(
+            files, desc='Extracting Features: ', total=len(files)
+        ):
+            try:
+                features = self._extract(file, **kwargs)
+                df = self.features_to_df(features, file, agg)
+                file_features_df.append(df)
+            except Exception as e:
+                logger.error(
+                    f'Error at feature_extractor.py at file: {file} - {e}, {e.with_traceback()}'
+                )
+                pass
+        try:
+            unified_df = pd.concat(file_features_df)
+            unified_df.to_csv(output_path, sep=output_separator, index=False)
+        except Exception as e:
+            logger.error(
+                f'Error at feature_extractor.py on unified_df - {e}, {e.with_traceback()}'
+            )
 
     def features_to_df(
         self, features: Dict[str, List[int | float]], file_path: str, agg=False
