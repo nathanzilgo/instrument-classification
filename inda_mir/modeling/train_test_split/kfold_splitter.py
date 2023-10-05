@@ -13,28 +13,16 @@ from inda_mir.modeling.train_test_split.splitter import (
 
 class StratifiedKFoldSplitter(TrainTestSplitter):
     def split(
-        self,
-        track_metadata: pd.DataFrame,
-        track_features: pd.DataFrame,
-        **kwargs
+        self, track_data: pd.DataFrame, **kwargs
     ) -> List[DatasetInterface]:
-        return self._split(track_metadata, track_features, **kwargs)
+        return self._split(track_data, **kwargs)
 
     def _split(
         self,
-        track_metadata: pd.DataFrame,
-        track_features: pd.DataFrame,
+        track_data: pd.DataFrame,
         k: int,
         random_state: int,
     ) -> List[DatasetInterface]:
-
-        track_data = pd.merge(
-            track_features,
-            track_metadata[['track_id', 'sample_path', 'label']],
-            left_on='filename',
-            right_on='sample_path',
-            how='left',
-        ).dropna()
 
         track_labels = track_data[['track_id', 'label']].drop_duplicates()
         folds = StratifiedKFold(

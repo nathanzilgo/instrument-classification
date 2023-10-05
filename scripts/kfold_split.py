@@ -4,19 +4,15 @@ import pandas as pd
 import pickle
 
 from inda_mir.modeling.train_test_split import StratifiedKFoldSplitter
+from scripts.util.config import instrument_classification_config as icc
 
-OUTDIR = './output-inda/train_test_split/'
-OUTFILE = 'kfold_split'
+OUTFILE = icc['outputs']['TRAIN_TEST_SPLITS']
 
-os.makedirs(OUTDIR, exist_ok=True)
+FEATURES_PATH = './output/features/freesound_features.csv'
 
-METADATA_PATH = './output-inda/metadata/metadata.csv'
-FEATURES_PATH = './output-inda/features_output/freesound_features.csv'
-
-metadata_df = pd.read_csv(METADATA_PATH)
 features_df = pd.read_csv(FEATURES_PATH)
 
 kfold = StratifiedKFoldSplitter()
-r = kfold.split(metadata_df, features_df, k=10, random_state=0)
+r = kfold.split(features_df, k=10, random_state=0)
 
-pickle.dump(r, open(os.path.join(OUTDIR, OUTFILE) + '.data', 'wb'))
+pickle.dump(r, open(OUTFILE + '.data', 'wb'))

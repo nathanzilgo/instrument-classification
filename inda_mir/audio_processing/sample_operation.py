@@ -1,3 +1,5 @@
+import os
+
 from inda_mir.audio_processing.audio_operation import AudioOperation
 from inda_mir.utils.logger import logger
 from pydub import AudioSegment  # type: ignore
@@ -10,7 +12,8 @@ class SampleOperation(AudioOperation):
         input_format: str = None,
         output_format: str = 'ogg',
         sample_duration: int = 10000,
-        output_path: str = './output',
+        output_dir: str = './output',
+        output_basename: str = 'track',
         keep_trace: bool = False,
     ) -> None:
         """
@@ -33,7 +36,9 @@ class SampleOperation(AudioOperation):
         for i in range(0, len(track), sample_duration):
             if len(track) > i + sample_duration or keep_trace:
                 track[i : i + sample_duration].export(
-                    f'{output_path}_{i}.{output_format}',
+                    os.path.join(
+                        output_dir, f'{output_basename}_{i}.{output_format}'
+                    ),
                     format=output_format,
                 )
             else:

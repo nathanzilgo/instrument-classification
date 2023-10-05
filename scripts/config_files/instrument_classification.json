@@ -1,0 +1,34 @@
+{
+  "dirs": {
+    "ROOT": "./output",
+    "RAW_TRACKS": "raw_tracks",
+    "METADATA": "metadata",
+    "PROCESSED_SAMPLES": "samples",
+    "FEATURES": "features",
+    "TRAIN_TEST_SPLITS": "train_test_split"
+  },
+  "metadata": {
+    "RAW_TRACKS": "tracks.csv",
+    "PROCESSED_SAMPLES": "samples.csv"
+  },
+  "outputs": {
+    "FEATURES": "freesound_features.csv",
+    "TRAIN_TEST_SPLITS": "random_split"
+  },
+  "params": {
+    "download_tracks": {
+      "BUCKET_NAME": "inda-storage-uploads",
+      "QUERY": "SELECT * from track_classification.track_labels_filtered LIMIT 5;"
+      
+    },
+    "process_tracks": {
+      "SAMPLE_DURATION": 10,
+      "SILENCE_THRESHOLD": -45,
+      "SILENCE_DURATION": 1,
+      "SILENCE_PERCENTAGE": 0.3
+    }
+  },
+  "gcs": {
+    "BUCKET_NAME": "inda-mir-samples"
+  }
+}

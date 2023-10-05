@@ -1,8 +1,23 @@
+# Formatting commands
+
 format:
 	python -m blue ./inda_mir ./scripts ./track_classifier_app ./models_showcase
 
 check.format:
 	python -m blue ./inda_mir ./scripts ./track_classifier_app --check
+
+lint:
+	python -m pyflakes ./inda_mir ./scripts ./track_classifier_app
+
+# Testing commands
+
+test:
+	pytest --disable-warnings
+
+# Installation
+
+venv:
+	python -m venv ./venv && source ./venv/bin/activate
 
 install:
 	pip install -e .
@@ -15,46 +30,6 @@ install.mac:
 install.linux:
 	make lightgbm.linux
 	pip install -e .
-	
-lint:
-	python -m pyflakes ./inda_mir ./scripts ./track_classifier_app
-
-run:
-	flask --app track_classifier_app/app --debug run
-
-run.models_showcase:
-	flask --app models_showcase/app --debug run
-
-test:
-	pytest --disable-warnings
-
-extract:
-	python scripts/feature_extraction.py ${args}
-
-split:
-	python scripts/train_test_split.py
-
-upload:
-	python scripts/bucket_upload.py
-
-process:
-	make clean
-	python scripts/track_data_cleanse.py ${args}
-
-query:
-	python scripts/util/get_query_metadata.py
-
-clean:
-	rm -rf ./output-inda/sampled ./output-inda/silenced 
-
-clean.raw:
-	rm -rf ./output-inda/raw
-
-clean.parameterized:
-	rm -rf ./output-inda/parameterized
-
-venv:
-	python -m venv ./venv && source ./venv/bin/activate
 
 lightgbm.mac:
 	brew install lightgbm
@@ -76,3 +51,28 @@ essentia.mac:
 	python waf install
 	python waf
 	pip install essentia
+
+# Processing
+
+download_tracks:
+	python scripts/download_tracks.py
+
+process_tracks:
+	python scripts/process_tracks.py
+
+feature_extraction:
+	python scripts/feature_extraction.py
+
+split:
+	python scripts/train_test_split.py
+
+gcs:
+	python scripts/gcs_interface.py
+
+## Applications
+
+run_manual_classifier:
+	flask --app track_classifier_app/app --debug run
+
+run_models_showcase:
+	flask --app models_showcase/app --debug run

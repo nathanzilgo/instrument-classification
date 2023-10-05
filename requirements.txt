@@ -23,4 +23,6 @@ lightgbm==4.0.0
 plotnine==0.12.3
 wordcloud==1.9.2
 shap==0.42.1
+google_cloud_storage==2.11.0
+ffmpeg-python==0.2.0
 essentia==2.1b6.dev1034; sys_platform=="linux"

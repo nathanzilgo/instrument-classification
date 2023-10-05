@@ -106,9 +106,9 @@
             var selectionSession = e.querySelector("select");
             var customLabelInput = e.querySelector("input");
 
-            var value;
+            var value = [];
             if (customLabelInput.value.trim().length !== 0) {
-                value = Array.from(customLabelInput.value.toLocaleLowerCase);
+                value.push(customLabelInput.value.toLocaleLowerCase())
             } else {
                 value = Array.from(selectionSession.querySelectorAll("option:checked"),o=>o.value);
             }
