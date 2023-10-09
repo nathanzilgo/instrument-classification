@@ -1,5 +1,6 @@
 import json
 import os
+import configparser
 
 
 def parse_config_file(filepath):
@@ -30,6 +31,8 @@ def parse_config_file(filepath):
     return config
 
 
+config_file_path = configparser.ConfigParser()
+config_file_path.read('scripts/config_files/config.ini')
 instrument_classification_config = parse_config_file(
-    'scripts/config_files/labeling_other_tracks.json'
+    config_file_path['config']['CONFIG_PATH']
 )

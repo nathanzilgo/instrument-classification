@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from inda_mir.audio_processing import SampleOperation, FFmpegSilenceDetector
+from inda_mir.processing_pipelines import sample_and_filter_silence
 
 from scripts.util.config import instrument_classification_config as icc
 
@@ -25,28 +25,23 @@ for track_path in os.listdir(TRACKS_DIR):
     full_track_path = os.path.join(TRACKS_DIR, track_path)
     sample_dir_path = os.path.join(OUTPUT_DIR, track_id)
 
-    if not os.path.exists(sample_dir_path):
+    silent_samples_path = sample_and_filter_silence(
+        track_path=full_track_path,
+        input_format=track_format,
+        output_dir=sample_dir_path,
+        output_basename=track_id,
+        sample_duration=SAMPLE_DURATION * 1000,
+        silence_threshold=SILENCE_THRESHOLD,
+        silence_duration=SILENCE_DURATION,
+        silence_percentage=SILENCE_PERCENTAGE,
+    )
 
-        os.makedirs(sample_dir_path)
-
-        SampleOperation.apply(
-            audio_path=full_track_path,
-            input_format=track_format,
-            output_dir=sample_dir_path,
-            output_basename=track_id,
-            sample_duration=SAMPLE_DURATION * 1000,
-        )
-
-    for sample_path in os.listdir(sample_dir_path):
-        full_sample_path = os.path.join(sample_dir_path, sample_path)
-        if not FFmpegSilenceDetector.apply(
-            full_sample_path,
-            audio_duration=SAMPLE_DURATION,
-            silence_threshold=SILENCE_THRESHOLD,
-            min_silence_duration=SILENCE_DURATION,
-            silence_percentage_threshold=SILENCE_PERCENTAGE,
-        ):
-            metadata.append((track_id, full_sample_path))
+    metadata.extend(
+        [
+            (track_id, full_sample_path)
+            for full_sample_path in silent_samples_path
+        ]
+    )
 
 samples = pd.DataFrame(metadata, columns=['track_id', 'sample_path'])
 pd.merge(samples, tracks, on='track_id').to_csv(
