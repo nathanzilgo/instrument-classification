@@ -20,7 +20,7 @@ class DatasetInterface:
 
     def get_features_names(self):
         return self.X_train.drop(
-            ['filename', 'frame', 'track_id', 'sample_path'], axis=1
+            ['filename', 'frame', 'track_id'], axis=1
         ).columns
 
     def get_numpy_data(self):
@@ -30,14 +30,14 @@ class DatasetInterface:
 
     def get_numpy_train_data(self):
         X_train = self.X_train.drop(
-            ['filename', 'frame', 'track_id', 'sample_path'], axis=1
+            ['filename', 'frame', 'track_id'], axis=1
         ).to_numpy()
         y_train = self.y_train.to_numpy()
         return X_train, y_train
 
     def get_numpy_test_data(self):
         X_test = self.X_test.drop(
-            ['filename', 'frame', 'track_id', 'sample_path'], axis=1
+            ['filename', 'frame', 'track_id'], axis=1
         ).to_numpy()
         y_test = self.y_test.to_numpy()
         return X_test, y_test

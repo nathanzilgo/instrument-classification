@@ -12,8 +12,8 @@
     "PROCESSED_SAMPLES": "samples.csv"
   },
   "outputs": {
-    "FEATURES": "freesound_features.csv",
-    "TRAIN_TEST_SPLITS": "random_split"
+    "FEATURES": "features_with_brass.csv",
+    "TRAIN_TEST_SPLITS": "random_split_with_brass"
   },
   "params": {
     "download_tracks": {

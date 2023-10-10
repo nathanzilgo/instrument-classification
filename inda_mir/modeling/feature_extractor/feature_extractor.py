@@ -34,16 +34,14 @@ class FeatureExtractor(ABC):
                 file_features_df.append(df)
             except Exception as e:
                 logger.error(
-                    f'Error at feature_extractor.py at file: {file} - {e}, {e.with_traceback()}'
+                    f'Error at feature_extractor.py at file: {file} - {e}'
                 )
                 pass
         try:
             unified_df = pd.concat(file_features_df)
             unified_df.to_csv(output_path, sep=output_separator, index=False)
         except Exception as e:
-            logger.error(
-                f'Error at feature_extractor.py on unified_df - {e}, {e.with_traceback()}'
-            )
+            logger.error(f'Error at feature_extractor.py on unified_df - {e}')
 
     def features_to_df(
         self, features: Dict[str, List[int | float]], file_path: str, agg=False
