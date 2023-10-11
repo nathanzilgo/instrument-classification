@@ -13,6 +13,7 @@ TYPES_TO_REMOTE_DIR = {
     'features': 'features',
     'tts': 'train_test_splits',
     'model': 'models',
+    'metadata': 'metadata',
 }
 
 TYPES_TO_LOCAL_DIR = {
@@ -20,6 +21,7 @@ TYPES_TO_LOCAL_DIR = {
     'samples': icc['dirs']['PROCESSED_SAMPLES'],
     'features': icc['dirs']['FEATURES'],
     'tts': icc['dirs']['TRAIN_TEST_SPLITS'],
+    'metadata': icc['dirs']['METADATA'],
     'model': './models',
 }
 
@@ -42,7 +44,7 @@ if __name__ == '__main__':
         '-t',
         '--type',
         dest='type',
-        choices=['raw', 'samples', 'features', 'tts', 'model'],
+        choices=['raw', 'samples', 'features', 'tts', 'model', 'metadata'],
         required=True,
     )
     parser.add_argument('-f', '--filename', dest='filename', required=False)
@@ -50,18 +52,15 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.operation == 'upload':
-        if args.type not in ['raw', 'samples']:
-            if not args.filename:
-                print('Filename is required for this type.')
-            else:
-                filepath = os.path.join(
-                    TYPES_TO_LOCAL_DIR[args.type], args.filename
-                )
-                destination_path = os.path.join(
-                    TYPES_TO_REMOTE_DIR[args.type], args.filename
-                )
-                if os.path.exists(filepath):
-                    upload_blob(BUCKET_NAME, filepath, destination_path)
+        if args.type not in ['raw', 'samples', 'metadata']:
+            filepath = os.path.join(
+                TYPES_TO_LOCAL_DIR[args.type], args.filename
+            )
+            destination_path = os.path.join(
+                TYPES_TO_REMOTE_DIR[args.type], args.filename
+            )
+            if os.path.exists(filepath):
+                upload_blob(BUCKET_NAME, filepath, destination_path)
         else:
             file = zip_dir(TYPES_TO_LOCAL_DIR[args.type])
             destination_path = os.path.join(
@@ -75,7 +74,7 @@ if __name__ == '__main__':
         filepath = os.path.join(TYPES_TO_LOCAL_DIR[args.type], args.filename)
         download_blob(BUCKET_NAME, source_path, filepath)
 
-        if args.type in ['raw', 'samples']:
+        if args.type in ['raw', 'samples', 'metadata']:
             z = ZipFile(filepath)
             z.extractall(TYPES_TO_LOCAL_DIR[args.type])
             os.remove(filepath)

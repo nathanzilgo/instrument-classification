@@ -42,7 +42,7 @@ gcloud auth application-default login
 
 ### Configuration file
 
-Our scripts use a [configuration file](scripts/config_files/instrument_classification.json) that holds all the configuration needed to run them.
+Our scripts use a [configuration file](scripts/config_files/instrument_classification.json) that holds all the configuration needed to run them. You can create new configurations files based on this, to use a new configuration file, you must change the CONFIG_PATH variable in the [config.ini](scripts/config_files/config.ini).
 
 ### Download, preprocess, feature extraction and data partition
 
