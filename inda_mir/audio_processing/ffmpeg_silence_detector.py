@@ -1,9 +1,7 @@
 import ffmpeg
-import subprocess
 import re
 
 from inda_mir.audio_processing.audio_operation import AudioOperation
-from inda_mir.utils.logger import logger
 
 
 class FFmpegSilenceDetector(AudioOperation):
@@ -17,27 +15,18 @@ class FFmpegSilenceDetector(AudioOperation):
         **kwargs
     ) -> bool:
 
-        p = subprocess.Popen(
-            (
-                ffmpeg.input(audio_path)
-                .filter(
-                    'silencedetect',
-                    n='{}dB'.format(silence_threshold),
-                    d=min_silence_duration,
-                )
-                .output('-', format='null')
-                .compile()
+        output = (
+            ffmpeg.input(audio_path)
+            .filter(
+                'silencedetect',
+                n='{}dB'.format(silence_threshold),
+                d=min_silence_duration,
             )
-            + [
-                '-nostats'
-            ],  # FIXME: use .nostats() once it's implemented in ffmpeg-python.
-            stderr=subprocess.PIPE,
+            .output('-', format='null')
+            .run(capture_stdout=True, capture_stderr=True)
         )
 
-        output = p.communicate()[1].decode('utf-8')
-        if p.returncode != 0:
-            logger.error(output)
-            raise Exception
+        output = output[1].decode('utf-8')
 
         lines = output.splitlines()
 

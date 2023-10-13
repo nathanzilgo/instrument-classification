@@ -1,13 +1,15 @@
 import os
 
+from typing import List
+
 from inda_mir.audio_processing.audio_operation import AudioOperation
 from inda_mir.utils.logger import logger
 from pydub import AudioSegment  # type: ignore
 
 
 class SampleOperation(AudioOperation):
-    @staticmethod
     def apply(
+        self,
         audio_path: str,
         input_format: str = None,
         output_format: str = 'ogg',
@@ -31,15 +33,42 @@ class SampleOperation(AudioOperation):
             None
         """
 
+        segments = self._get_segments(
+            audio_path, input_format, sample_duration, keep_trace
+        )
+        self._write_segments(
+            segments, output_dir, output_basename, output_format
+        )
+
+    def _get_segments(
+        self,
+        audio_path: str,
+        input_format: str,
+        sample_duration: int,
+        keep_trace: bool,
+    ) -> List[AudioSegment]:
+
         track = AudioSegment.from_file(audio_path, format=input_format)
 
+        segments = []
         for i in range(0, len(track), sample_duration):
-            if len(track) > i + sample_duration or keep_trace:
-                track[i : i + sample_duration].export(
-                    os.path.join(
-                        output_dir, f'{output_basename}_{i}.{output_format}'
-                    ),
-                    format=output_format,
-                )
+            if len(track) >= i + sample_duration or keep_trace:
+                segments.append(track[i : i + sample_duration])
             else:
                 logger.info(f'Skipping {len(track) - i} trace at {i}')
+        return segments
+
+    def _write_segments(
+        self,
+        segments: List[AudioSegment],
+        output_dir: str,
+        output_basename: str,
+        output_format: str,
+    ):
+        for i in range(0, len(segments)):
+            segments[i].export(
+                os.path.join(
+                    output_dir, f'{output_basename}_{i}.{output_format}'
+                ),
+                format=output_format,
+            )
