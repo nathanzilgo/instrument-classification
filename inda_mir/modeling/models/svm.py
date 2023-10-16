@@ -1,6 +1,6 @@
 import numpy.typing as npt
 
-from sklearn.svm import SVC
+import sklearn.svm
 
 from inda_mir.modeling.models.base_model import BaseModel
 
@@ -8,7 +8,7 @@ from inda_mir.modeling.models.base_model import BaseModel
 class SVMClassifier(BaseModel):
     def __init__(self, **kwargs) -> None:
         super().__init__()
-        self.model = SVC(probability=True, **kwargs)
+        self.model = sklearn.svm.SVC(probability=True, **kwargs)
         self.name = 'SVM'
 
     def _fit(self, X: npt.NDArray, y: npt.NDArray) -> None:
@@ -18,6 +18,7 @@ class SVMClassifier(BaseModel):
         return self.model.predict_proba(X)
 
     def _get_feature_importance(self) -> npt.NDArray:
+        print(self.model.coef_)
         return self.model.coef_
 
     def get_params(self) -> dict:

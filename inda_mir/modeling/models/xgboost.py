@@ -1,6 +1,6 @@
 import numpy.typing as npt
 
-from xgboost import XGBClassifier as XGBC
+import xgboost
 
 from inda_mir.modeling.models.base_model import BaseModel
 
@@ -8,7 +8,7 @@ from inda_mir.modeling.models.base_model import BaseModel
 class XGBClassifier(BaseModel):
     def __init__(self, **kwargs) -> None:
         super().__init__()
-        self.model = XGBC(**kwargs)
+        self.model = xgboost.XGBClassifier(**kwargs)
         self.name = 'XGBoost'
 
     def _fit(self, X: npt.NDArray, y: npt.NDArray) -> None:

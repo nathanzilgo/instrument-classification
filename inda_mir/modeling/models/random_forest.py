@@ -1,6 +1,6 @@
 import numpy.typing as npt
 
-from sklearn.ensemble import RandomForestClassifier as skRandomForestClassifier
+import sklearn.ensemble as sken
 
 from inda_mir.modeling.models.base_model import BaseModel
 
@@ -8,7 +8,7 @@ from inda_mir.modeling.models.base_model import BaseModel
 class RandomForestClassifier(BaseModel):
     def __init__(self, **kwargs) -> None:
         super().__init__()
-        self.model = skRandomForestClassifier(**kwargs)
+        self.model = sken.RandomForestClassifier(**kwargs)
         self.name = 'RandomForest'
 
     def _fit(self, X: npt.NDArray, y: npt.NDArray) -> None:
