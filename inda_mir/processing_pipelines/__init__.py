@@ -29,13 +29,20 @@ def sample_and_filter_silence(
     not_silent_samples = []
     for sample_path in os.listdir(output_dir):
         full_sample_path = os.path.join(output_dir, sample_path)
-        if not FFmpegSilenceDetector.apply(
-            full_sample_path,
-            audio_duration=sample_duration,
-            silence_threshold=silence_threshold,
-            min_silence_duration=silence_duration,
-            silence_percentage_threshold=silence_percentage,
-        ):
+
+        is_silence = False
+        try:
+            is_silence = FFmpegSilenceDetector.apply(
+                full_sample_path,
+                audio_duration=sample_duration,
+                silence_threshold=silence_threshold,
+                min_silence_duration=silence_duration,
+                silence_percentage_threshold=silence_percentage,
+            )
+        except:
+            continue
+
+        if not is_silence:
             not_silent_samples.append(full_sample_path)
 
     return not_silent_samples

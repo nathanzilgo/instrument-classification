@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import tqdm
 
 from inda_mir.processing_pipelines import sample_and_filter_silence
 
@@ -19,7 +20,7 @@ SILENCE_PERCENTAGE = icc['params']['process_tracks']['SILENCE_PERCENTAGE']
 tracks = pd.read_csv(TRACK_METADATA_PATH)[['track_id', 'label']]
 
 metadata = []
-for track_path in os.listdir(TRACKS_DIR):
+for track_path in tqdm.tqdm(os.listdir(TRACKS_DIR)):
     track_id, track_format = track_path.split('.')
 
     full_track_path = os.path.join(TRACKS_DIR, track_path)

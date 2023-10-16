@@ -3,6 +3,7 @@ import pandas as pd
 
 from inda_mir.modeling.feature_extractor import (
     FreesoundExtractor,
+    EssentiaExtractor,
 )
 
 from scripts.util.config import instrument_classification_config as icc
@@ -10,7 +11,7 @@ from scripts.util.config import instrument_classification_config as icc
 OUTPUT_PATH = icc['outputs']['FEATURES']
 SAMPLE_METADATA_PATH = icc['metadata']['PROCESSED_SAMPLES']
 
-feature_extractor = FreesoundExtractor()
+feature_extractor = EssentiaExtractor()
 
 samples = pd.read_csv(SAMPLE_METADATA_PATH)
 

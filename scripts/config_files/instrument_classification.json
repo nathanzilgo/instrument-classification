@@ -12,7 +12,7 @@
     "PROCESSED_SAMPLES": "samples.csv"
   },
   "outputs": {
-    "FEATURES": "freesound_features.csv",
+    "FEATURES": "essentia_features.csv",
     "TRAIN_TEST_SPLITS": "random_split"
   },
   "params": {
