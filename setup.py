@@ -5,10 +5,14 @@ with open('requirements.txt') as f:
 
 setup(
     name='inda_mir',
-    version='0.1',
-    description='Indaband Music Information Retrieval',
+    version='0.1.0',
+    description='A helper library for Music Information Retrieval tasks at indaband',
+    url='https://github.com/indaband/track_classifier',
     author='inda.band',
-    author_email='nathan.pedroza@inda.band',
-    packages=find_packages(),
+    classifiers=[
+        'Programming Language :: Python :: 3.11'
+    ],
+    packages=find_packages(include=['inda_mir', 'inda_mir.*']),
     install_requires=install_requires,
+    python_requires='>=3.11'
 )
