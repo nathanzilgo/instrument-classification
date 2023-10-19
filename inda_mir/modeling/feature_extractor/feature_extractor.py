@@ -1,7 +1,9 @@
 import pandas as pd
+import numpy as np
 
 from abc import ABC, abstractmethod
 from typing import Dict, List
+from numpy.typing import NDArray
 
 from tqdm import tqdm
 
@@ -18,32 +20,69 @@ class FeatureExtractor(ABC):
     def extract(
         self,
         files: List[str],
-        output_path: str,
+        output_path: str = '',
         output_separator: str = ',',
+        save_df: bool = True,
         agg: bool = False,
         **kwargs,
-    ):
+    ) -> NDArray:
 
-        file_features_df = []
+        features = []
         for file in tqdm(
             files, desc='Extracting Features: ', total=len(files)
         ):
             try:
-                features = self._extract(file, **kwargs)
-                df = self.features_to_df(features, file, agg)
-                file_features_df.append(df)
+                extracted_features = self._extract(file, **kwargs)
+                features.append(extracted_features)
             except Exception as e:
                 logger.error(
                     f'Error at feature_extractor.py at file: {file} - {e}'
                 )
                 pass
+
+        if save_df:
+            self.save_features_as_df(
+                files, features, output_path, output_separator, agg
+            )
+
+        return self.features_to_array(features)
+
+    def features_to_array(self, features: List[Dict[str, List[int | float]]]):
+
+        if len(features) == 0:
+            return [], np.array([])
+
+        features_names = [k for k in features[0]]
+        features = [
+            [features[i][v] for v in features_names]
+            for i in range(len(features))
+        ]
+        return features_names, np.array(features)
+
+    def save_features_as_df(
+        self,
+        files: List[str],
+        features: List[Dict[str, List[int | float]]],
+        output_path: str,
+        output_separator: str = ',',
+        agg: bool = False,
+    ):
+        file_features_df = []
+        for filename, extracted_features in zip(files, features):
+            file_features_df.append(
+                self._features_dict_to_df(
+                    extracted_features, filename, agg=agg
+                )
+            )
+
         try:
             unified_df = pd.concat(file_features_df)
             unified_df.to_csv(output_path, sep=output_separator, index=False)
+            print('Hi', file_features_df)
         except Exception as e:
             logger.error(f'Error at feature_extractor.py on unified_df - {e}')
 
-    def features_to_df(
+    def _features_dict_to_df(
         self, features: Dict[str, List[int | float]], file_path: str, agg=False
     ) -> pd.DataFrame:
         df = pd.DataFrame.from_dict(features, orient='index').reset_index()

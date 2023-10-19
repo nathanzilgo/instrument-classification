@@ -11,5 +11,5 @@ def pow2db(value):
     )
 
 
-def squeezeRange(x, x1, x2):
+def squeeze_range(x, x1, x2):
     return 0.5 + 0.5 * math.tanh(-1.0 + 2.0 * (x - x1) / (x2 - x1))

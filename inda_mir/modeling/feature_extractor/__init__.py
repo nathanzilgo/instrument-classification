@@ -1,5 +1,3 @@
 from .essentia_freesound_extractor import FreesoundExtractor
-from .mfcc_audioflux_extractor import MFCCExtractor
-from .spectral_audioflux_extractor import SpectralExtractor
-from .vggish_extractor import VGGExtractor
+
 from .essentia_extractor import EssentiaExtractor

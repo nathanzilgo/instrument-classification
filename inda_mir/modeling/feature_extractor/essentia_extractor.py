@@ -1,18 +1,17 @@
 import json
 import statistics
 import tempfile
-import math
 
 from typing import Dict, List
 from flatten_json import flatten
 import essentia.standard as essentia
-from essentia import INFO, Pool, isSilent
+from essentia import Pool, isSilent
 
 from inda_mir.modeling.feature_extractor.feature_extractor import (
     FeatureExtractor,
 )
 
-from inda_mir.utils import pow2db, squeezeRange
+from inda_mir.utils import pow2db, squeeze_range
 
 
 class EssentiaExtractor(FeatureExtractor):
@@ -27,22 +26,7 @@ class EssentiaExtractor(FeatureExtractor):
         super().__init__()
         self.namespace = 'lowlevel'
 
-    @staticmethod
-    def pow2db(value):
-        SILENCE_CUTOFF = 1e-10
-        DB_SILENCE_CUTOFF = -100
-        return (
-            DB_SILENCE_CUTOFF
-            if value < SILENCE_CUTOFF
-            else 10.0 * math.log10(value)
-        )
-
-    @staticmethod
-    def squeeze_range(x, x1, x2):
-        return 0.5 + 0.5 * math.tanh(-1.0 + 2.0 * (x - x1) / (x2 - x1))
-
     def compute_average_loudness(self, pool):
-
         level_array = pool[self.namespace + 'loudness']
         pool.remove(self.namespace + 'loudness')
 
@@ -57,12 +41,10 @@ class EssentiaExtractor(FeatureExtractor):
             if level_array[i] <= THRESHOLD:
                 level_array[i] = THRESHOLD
 
-        levelAverage = EssentiaExtractor.pow2db(statistics.mean(level_array))
+        levelAverage = pow2db(statistics.mean(level_array))
 
         x1, x2 = -5.0, -2.0
-        levelAverageSqueezed = EssentiaExtractor.squeeze_range(
-            levelAverage, x1, x2
-        )
+        levelAverageSqueezed = squeeze_range(levelAverage, x1, x2)
         pool.set(
             self.namespace + '.' + 'average_loudness', levelAverageSqueezed
         )
@@ -100,7 +82,6 @@ class EssentiaExtractor(FeatureExtractor):
         )
 
     def compute(self, audio, pool, options):
-
         sampleRate = options['sampleRate']
         frameSize = options['frameSize']
         hopSize = options['hopSize']
@@ -145,7 +126,6 @@ class EssentiaExtractor(FeatureExtractor):
         bark = essentia.BarkBands(numberBands=27)
 
         for frame in frames:
-
             if options['skipSilence'] and isSilent(frame):
                 continue
 
@@ -202,39 +182,17 @@ class EssentiaExtractor(FeatureExtractor):
             barkbands = bark(frame_spectrum)
             pool.add(self.namespace + '.' + 'barkbands', barkbands)
 
-    def aggregate(self, pool):
-        exceptions = {
-            f'{self.namespace}.spectral_contrast_calleys_coeffs': ['stdev'],
-            f'{self.namespace}.melbands96': ['median'],
-            f'{self.namespace}.zerocrossingrate': ['max', 'median'],
-            f'{self.namespace}.mfcc': [
-                'min',
-                'max',
-                'stdev',
-                'median',
-                'mean',
-            ],
-            f'{self.namespace}.spectral_centroid': ['mean'],
-            f'{self.namespace}.gfcc': ['mean', 'dvar'],
-            f'{self.namespace}.erbbands_spread': ['dvar'],
-            f'{self.namespace}.spectral_contrast_coeffs': ['stdev', 'mean'],
-            f'{self.namespace}.spectral_contrast_valleys': [
-                'dvar',
-                'stdev',
-                'median',
-            ],
-            f'{self.namespace}.pitch_instantaneous_confidence': [
-                'mean',
-                'dvar',
-            ],
-            f'{self.namespace}.spectral_rms': ['dvar'],
-            f'{self.namespace}.barkbands': ['median'],
-        }
+    def aggregate(self, pool, exceptions=None):
 
-        defaultStats = ['min', 'max', 'stdev', 'median', 'mean', 'dvar']
+        if exceptions is None:
+            exceptions = self.get_default_exceptions()
+        else:
+            exceptions = exceptions
+
+        default_stats = ['min', 'max', 'stdev', 'median', 'mean', 'dvar']
 
         return essentia.PoolAggregator(
-            defaultStats=defaultStats, exceptions=exceptions
+            defaultStats=default_stats, exceptions=exceptions
         )(pool)
 
     def _extract(
@@ -247,7 +205,6 @@ class EssentiaExtractor(FeatureExtractor):
         skip_silence: bool = True,
         **kwargs,
     ) -> Dict[str, List[int | float]]:
-
         loader = essentia.AudioLoader(filename=file_path, computeMD5=True)
         (
             audio,
@@ -291,3 +248,32 @@ class EssentiaExtractor(FeatureExtractor):
         features = flatten(features['lowlevel'])
 
         return features
+
+    def get_default_exceptions(self) -> Dict[str, List[str]]:
+        return {
+            f'{self.namespace}.spectral_contrast_calleys_coeffs': ['stdev'],
+            f'{self.namespace}.melbands96': ['median'],
+            f'{self.namespace}.zerocrossingrate': ['max', 'median'],
+            f'{self.namespace}.mfcc': [
+                'min',
+                'max',
+                'stdev',
+                'median',
+                'mean',
+            ],
+            f'{self.namespace}.spectral_centroid': ['mean'],
+            f'{self.namespace}.gfcc': ['mean', 'dvar'],
+            f'{self.namespace}.erbbands_spread': ['dvar'],
+            f'{self.namespace}.spectral_contrast_coeffs': ['stdev', 'mean'],
+            f'{self.namespace}.spectral_contrast_valleys': [
+                'dvar',
+                'stdev',
+                'median',
+            ],
+            f'{self.namespace}.pitch_instantaneous_confidence': [
+                'mean',
+                'dvar',
+            ],
+            f'{self.namespace}.spectral_rms': ['dvar'],
+            f'{self.namespace}.barkbands': ['median'],
+        }
