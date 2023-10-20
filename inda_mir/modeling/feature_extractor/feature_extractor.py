@@ -53,6 +53,7 @@ class FeatureExtractor(ABC):
             return [], np.array([])
 
         features_names = [k for k in features[0]]
+        features_names.sort()
         features = [
             [features[i][v] for v in features_names]
             for i in range(len(features))

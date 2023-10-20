@@ -18,7 +18,7 @@ def sample_and_filter_silence(
 
         os.makedirs(output_dir)
 
-        SampleOperation.apply(
+        SampleOperation().apply(
             audio_path=track_path,
             input_format=input_format,
             output_dir=output_dir,
