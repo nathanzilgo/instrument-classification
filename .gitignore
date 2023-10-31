@@ -169,9 +169,11 @@ cython_debug/
 
 # Train/Test splits
 *.data
+*.zip
 
 # Saved models
 models/*.pkl
 models/*.json
+*.checkpoint
 notebooks/random_split.data
 nohup.out

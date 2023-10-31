@@ -10,3 +10,7 @@
 | [fimportance_models.ipynb](./fimportance_models.ipynb)  | Includes an analysis about the feature importance of the models (RF, XGBoost and LightGBM) and evaluates then using only top-k most important features. |
 | [explaining_the_models.ipynb](./explaining_the_models.ipynb)  | Includes an analysis using the SHAP library to obtain detailied information about feature importance for the models. |
 | [subset_of_features.ipynb](./subset_of_features.ipynb)  | Trains a LightGBM model over the features extracted from our own Essentia extractor. |
+| [freesound_features_without_brass.ipynb](./freesound_features_without_brass.ipynb) | Trains the lgbm_fe_rs_271023 model |
+| [freesound_features_with_brass.ipynb](./freesound_features_with_brass.ipynb) | Trains the lgbm_fe_rs_wbrass_271023 model |
+| [our_extractor_features_without_brass.ipynb](./our_extractor_features_without_brass.ipynb) | Trains the lgbm_oe_rs_271023 model |
+| [our_extractor_features_with_brass.ipynb](./our_extractor_features_with_brass.ipynb) | Trains the lgbm_oe_rs_wbrass_271023 model |
