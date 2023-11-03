@@ -12,6 +12,7 @@ def sample_and_filter_silence(
     silence_threshold,
     silence_duration,
     silence_percentage,
+    keep_trace=False,
 ):
 
     if not os.path.exists(output_dir):
@@ -24,6 +25,7 @@ def sample_and_filter_silence(
             output_dir=output_dir,
             output_basename=output_basename,
             sample_duration=sample_duration,
+            keep_trace=keep_trace,
         )
 
     not_silent_samples = []
