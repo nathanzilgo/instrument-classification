@@ -24,7 +24,8 @@
       "SAMPLE_DURATION": 10,
       "SILENCE_THRESHOLD": -45,
       "SILENCE_DURATION": 1,
-      "SILENCE_PERCENTAGE": 0.3
+      "SILENCE_PERCENTAGE": 0.3,
+      "SAMPLE_PROPORTION": 1.0
     }
   },
   "gcs": {

@@ -16,6 +16,7 @@ SAMPLE_DURATION = icc['params']['process_tracks']['SAMPLE_DURATION']
 SILENCE_THRESHOLD = icc['params']['process_tracks']['SILENCE_THRESHOLD']
 SILENCE_DURATION = icc['params']['process_tracks']['SILENCE_DURATION']
 SILENCE_PERCENTAGE = icc['params']['process_tracks']['SILENCE_PERCENTAGE']
+SAMPLE_PROPORTION = icc['params']['process_tracks']['SAMPLE_PROPORTION']
 
 tracks = pd.read_csv(TRACK_METADATA_PATH)[['track_id', 'label']]
 
@@ -35,6 +36,7 @@ for track_path in tqdm.tqdm(os.listdir(TRACKS_DIR)):
         silence_threshold=SILENCE_THRESHOLD,
         silence_duration=SILENCE_DURATION,
         silence_percentage=SILENCE_PERCENTAGE,
+        sample_proportion=SAMPLE_PROPORTION,
     )
 
     metadata.extend(

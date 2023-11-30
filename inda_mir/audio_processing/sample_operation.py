@@ -11,6 +11,7 @@ class SampleOperation(AudioOperation):
     def apply(
         self,
         audio_path: str,
+        sample_proportion: float,
         input_format: str = None,
         output_format: str = 'ogg',
         sample_duration: int = 10000,
@@ -34,7 +35,7 @@ class SampleOperation(AudioOperation):
         """
 
         segments = self._get_segments(
-            audio_path, input_format, sample_duration, keep_trace
+            audio_path, input_format, sample_duration, keep_trace, sample_proportion
         )
         self._write_segments(
             segments, output_dir, output_basename, output_format
@@ -46,12 +47,13 @@ class SampleOperation(AudioOperation):
         input_format: str,
         sample_duration: int,
         keep_trace: bool,
+        sample_proportion: float,
     ) -> List[AudioSegment]:
 
         track = AudioSegment.from_file(audio_path, format=input_format)
 
         segments = []
-        for i in range(0, len(track), sample_duration):
+        for i in range(0, int(sample_proportion * len(track)), sample_duration):
             if len(track) >= i + sample_duration or keep_trace:
                 segments.append(track[i : i + sample_duration])
             else:

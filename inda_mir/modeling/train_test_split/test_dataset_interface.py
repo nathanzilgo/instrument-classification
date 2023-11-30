@@ -16,11 +16,11 @@ x_train_data = [
 
 x_test_data = [[3, 8, 1, 7], [2, 7, 6, 2], [4, 1, 5, 7]]
 
-N_SAMPLES_TRAIN = len(x_train_data)
-N_SAMPLES_TEST = len(x_test_data)
+sample_proportion_TRAIN = len(x_train_data)
+sample_proportion_TEST = len(x_test_data)
 
-train_ids = [100 + i for i in range(N_SAMPLES_TRAIN)]
-test_ids = [1000 + i for i in range(N_SAMPLES_TEST)]
+train_ids = [100 + i for i in range(sample_proportion_TRAIN)]
+test_ids = [1000 + i for i in range(sample_proportion_TEST)]
 
 x_train = pd.DataFrame(x_train_data, columns=list('ABCD'))
 x_test = pd.DataFrame(x_test_data, columns=list('ABCD'))
@@ -34,10 +34,10 @@ x_test['frame'] = 0
 x_test['track_id'] = test_ids
 
 y_train = pd.DataFrame(
-    ['drums' for _ in range(N_SAMPLES_TRAIN)], columns=['label']
+    ['drums' for _ in range(sample_proportion_TRAIN)], columns=['label']
 )
 y_test = pd.DataFrame(
-    ['drums' for _ in range(N_SAMPLES_TEST)], columns=['label']
+    ['drums' for _ in range(sample_proportion_TEST)], columns=['label']
 )
 
 

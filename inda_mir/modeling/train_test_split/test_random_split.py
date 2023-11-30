@@ -19,11 +19,11 @@ track_data = [
     [4, 1, 5, 7],
 ]
 
-n_samples = len(track_data)
+sample_proportion = len(track_data)
 track_data = pd.DataFrame(track_data, columns=list('ABCD'))
-track_data['track_id'] = list(range(n_samples))
+track_data['track_id'] = list(range(sample_proportion))
 track_data['label'] = [
-    'drums' if i % 2 == 0 else 'bass' for i in range(n_samples)
+    'drums' if i % 2 == 0 else 'bass' for i in range(sample_proportion)
 ]
 
 
@@ -33,10 +33,10 @@ def test_split_train_size_50():
     X_train_data, X_test_data, y_train_data, y_test_data, labels = r._split(
         track_data, train_size=train_size, random_state=0
     )
-    assert len(X_train_data) == train_size * n_samples
-    assert len(X_test_data) == int((1 - train_size) * n_samples)
-    assert len(y_train_data) == train_size * n_samples
-    assert len(y_test_data) == int((1 - train_size) * n_samples)
+    assert len(X_train_data) == train_size * sample_proportion
+    assert len(X_test_data) == int((1 - train_size) * sample_proportion)
+    assert len(y_train_data) == train_size * sample_proportion
+    assert len(y_test_data) == int((1 - train_size) * sample_proportion)
     assert (
         len(
             set(X_train_data['track_id']).intersection(X_test_data['track_id'])
@@ -52,10 +52,10 @@ def test_split_train_size_70():
     X_train_data, X_test_data, y_train_data, y_test_data, labels = r._split(
         track_data, train_size=train_size, random_state=0
     )
-    assert len(X_train_data) == train_size * n_samples
-    assert len(X_test_data) == int((1 - train_size) * n_samples)
-    assert len(y_train_data) == train_size * n_samples
-    assert len(y_test_data) == int((1 - train_size) * n_samples)
+    assert len(X_train_data) == train_size * sample_proportion
+    assert len(X_test_data) == int((1 - train_size) * sample_proportion)
+    assert len(y_train_data) == train_size * sample_proportion
+    assert len(y_test_data) == int((1 - train_size) * sample_proportion)
     assert (
         len(
             set(X_train_data['track_id']).intersection(X_test_data['track_id'])

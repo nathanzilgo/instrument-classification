@@ -12,6 +12,7 @@ def sample_and_filter_silence(
     silence_threshold,
     silence_duration,
     silence_percentage,
+    sample_proportion=1.0,
     keep_trace=False,
 ):
 
@@ -26,6 +27,7 @@ def sample_and_filter_silence(
             output_basename=output_basename,
             sample_duration=sample_duration,
             keep_trace=keep_trace,
+            sample_proportion=sample_proportion,
         )
 
     not_silent_samples = []

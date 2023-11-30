@@ -41,6 +41,7 @@ def test_segment_size_equals_sample_size(audio_segment_mock: mock.Mock):
         '/path/to/file',
         'ogg',
         sample_duration=sample_duration,
+        sample_proportion=1.0,
         keep_trace=True,
     )
     for segment in segments:
@@ -62,6 +63,7 @@ def test_track_duration_is_multiple_with_keep_trace(
         '/path/to/file',
         'ogg',
         sample_duration=sample_duration,
+        sample_proportion=1.0,
         keep_trace=True,
     )
     assert len(segments) == expected_size
@@ -82,6 +84,7 @@ def test_track_duration_is_multiple_without_keep_trace(
         '/path/to/file',
         'ogg',
         sample_duration=sample_duration,
+        sample_proportion=1.0,
         keep_trace=False,
     )
     assert len(segments) == expected_size
@@ -102,6 +105,7 @@ def test_track_duration_not_multiple_with_keep_trace(
         '/path/to/file',
         'ogg',
         sample_duration=sample_duration,
+        sample_proportion=1.0,
         keep_trace=True,
     )
     assert len(segments) == expected_size
@@ -122,6 +126,7 @@ def test_track_duration_not_multiple_without_keep_trace(
         '/path/to/file',
         'ogg',
         sample_duration=sample_duration,
+        sample_proportion=1.0,
         keep_trace=False,
     )
     assert len(segments) == expected_size
@@ -141,7 +146,8 @@ def test_writes_files(audio_segment_mock: mock.Mock):
     with mock.patch.object(AudioSegment, 'export', m):
         s.apply(
             '/path/to/file',
-            'ogg',
+            sample_proportion=1.0,
+            input_format='ogg',
             sample_duration=sample_duration,
             keep_trace=True,
             output_dir='/path/to/outdir',
@@ -170,8 +176,9 @@ def test_writes_files_with_basename(audio_segment_mock: mock.Mock):
     m = mock.mock_open()
     with mock.patch.object(AudioSegment, 'export', m):
         s.apply(
-            '/path/to/file',
-            'ogg',
+            audio_path='/path/to/file',
+            sample_proportion=1.0,
+            input_format='ogg',
             sample_duration=sample_duration,
             keep_trace=True,
             output_dir='/path/to/outdir',
@@ -201,8 +208,9 @@ def test_writes_files_with_format(audio_segment_mock: mock.Mock):
     m = mock.mock_open()
     with mock.patch.object(AudioSegment, 'export', m):
         s.apply(
-            '/path/to/file',
-            'ogg',
+            audio_path='/path/to/file',
+            sample_proportion=1.0,
+            input_format='ogg',
             sample_duration=sample_duration,
             keep_trace=True,
             output_dir='/path/to/outdir',

@@ -19,11 +19,11 @@ track_data = [
     [4, 1, 5, 7],
 ]
 
-n_samples = len(track_data)
+sample_proportion = len(track_data)
 track_data = pd.DataFrame(track_data, columns=list('ABCD'))
-track_data['track_id'] = list(range(n_samples))
+track_data['track_id'] = list(range(sample_proportion))
 track_data['label'] = [
-    'drums' if i % 2 == 0 else 'bass' for i in range(n_samples)
+    'drums' if i % 2 == 0 else 'bass' for i in range(sample_proportion)
 ]
 
 
@@ -40,7 +40,7 @@ def test_split_no_intersection():
     folds = skf.split(track_data, k=n_folds, random_state=0)
 
     for fold in folds:
-        assert len(fold.X_train) + len(fold.X_test) == n_samples
+        assert len(fold.X_train) + len(fold.X_test) == sample_proportion
         assert (
             len(
                 set(fold.X_train['track_id']).intersection(
