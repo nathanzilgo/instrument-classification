@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import pickle
 
 from abc import ABC, abstractmethod
 from typing import Dict, List
@@ -24,25 +25,32 @@ class FeatureExtractor(ABC):
         output_separator: str = ',',
         save_df: bool = True,
         agg: bool = False,
+        checkpoint: bool = False,
         **kwargs,
     ) -> NDArray:
 
         features = []
+        files_extracted = []
         for file in tqdm(
             files, desc='Extracting Features: ', total=len(files)
         ):
             try:
                 extracted_features = self._extract(file, **kwargs)
                 features.append(extracted_features)
+                files_extracted.append(file)
             except Exception as e:
                 logger.error(
                     f'Error at feature_extractor.py at file: {file} - {e}'
                 )
                 pass
 
+        if checkpoint:
+            features_data = {'files': files_extracted, 'features': features}
+            pickle.dump(features_data, open(output_path + '.checkpoint', 'wb'))
+
         if save_df:
             self.save_features_as_df(
-                files, features, output_path, output_separator, agg
+                files_extracted, features, output_path, output_separator, agg
             )
 
         return self.features_to_array(features)
@@ -68,6 +76,12 @@ class FeatureExtractor(ABC):
         output_separator: str = ',',
         agg: bool = False,
     ):
+
+        if len(files) != len(features):
+            raise ValueError(
+                'The lengths of the files and features parameters should be equal.'
+            )
+
         file_features_df = []
         for filename, extracted_features in zip(files, features):
             file_features_df.append(
@@ -79,7 +93,6 @@ class FeatureExtractor(ABC):
         try:
             unified_df = pd.concat(file_features_df)
             unified_df.to_csv(output_path, sep=output_separator, index=False)
-            print('Hi', file_features_df)
         except Exception as e:
             logger.error(f'Error at feature_extractor.py on unified_df - {e}')
 
