@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 
 from inda_mir.modeling.train_test_split import RandomTrainTestSplit

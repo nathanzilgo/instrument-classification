@@ -1,8 +1,6 @@
-import os
 import pandas as pd
 
 from inda_mir.modeling.feature_extractor import (
-    FreesoundExtractor,
     EssentiaExtractor,
 )
 

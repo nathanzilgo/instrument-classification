@@ -2,7 +2,7 @@ import pickle
 
 from typing import List
 
-from inda_mir.modeling.models import *
+from inda_mir.modeling.models import BaseModel
 from inda_mir.modeling.train_test_split import DatasetInterface
 
 

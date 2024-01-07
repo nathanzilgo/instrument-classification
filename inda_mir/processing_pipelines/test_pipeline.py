@@ -22,7 +22,7 @@ def _build_operations_mock(
     sample_op: mock.Mock, silence_op: mock.Mock, silent: List[bool] = []
 ):
 
-    sample_op.return_value = f'Created samples'
+    sample_op.return_value = 'Created samples'
     silence_op.side_effect = silent
 
 
