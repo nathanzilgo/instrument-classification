@@ -35,7 +35,11 @@ class SampleOperation(AudioOperation):
         """
 
         segments = self._get_segments(
-            audio_path, input_format, sample_duration, keep_trace, sample_proportion
+            audio_path,
+            input_format,
+            sample_duration,
+            keep_trace,
+            sample_proportion,
         )
         self._write_segments(
             segments, output_dir, output_basename, output_format
@@ -53,7 +57,9 @@ class SampleOperation(AudioOperation):
         track = AudioSegment.from_file(audio_path, format=input_format)
 
         segments = []
-        for i in range(0, int(sample_proportion * len(track)), sample_duration):
+        for i in range(
+            0, int(sample_proportion * len(track)), sample_duration
+        ):
             if len(track) >= i + sample_duration or keep_trace:
                 segments.append(track[i : i + sample_duration])
             else:
