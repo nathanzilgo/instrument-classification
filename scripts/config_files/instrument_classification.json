@@ -2,24 +2,37 @@
   "dirs": {
     "ROOT": "./output",
     "RAW_TRACKS": "raw_tracks",
+    "FEATURES": "features",
     "METADATA": "metadata",
     "PROCESSED_SAMPLES": "samples",
-    "FEATURES": "features",
-    "TRAIN_TEST_SPLITS": "train_test_split"
+    "TRAIN_TEST_SPLITS": "train_test_split",
+    "FEATURES_EXTRACTED": "features",
+    "FEATURES_VALIDATION": "features",
+    "FEATURES_TRAINED": "features",
+    "FLAML_PARAMS": "fine_tuning",
+    "GRID_PARAMS": "fine_tuning",
+    "GRID_MODEL": "models",
+    "RETRAINED_MODEL": "models"
   },
   "metadata": {
     "RAW_TRACKS": "tracks.csv",
     "PROCESSED_SAMPLES": "samples.csv"
   },
-  "outputs": {
-    "FEATURES": "essentia_features.csv",
-    "TRAIN_TEST_SPLITS": "random_split"
+  "outputs": {  
+    "FEATURES_EXTRACTED": "essentia_features.csv",
+    "FEATURES_VALIDATION": "validation_features.csv",
+    "FEATURES_TRAINED": "our_extractor_features_with_brass.csv",  
+    "TRAIN_TEST_SPLITS": "random_split",
+    "FLAML_PARAMS": "flaml_best_params.txt",
+    "GRID_PARAMS": "grid_search_results.txt",
+    "GRID_MODEL": "gbm_retrained_finetuned_gridsearch.pkl",
+    "RETRAINED_MODEL": "lgbm_retrained_untuned.pkl"
   },
   "params": {
     "download_tracks": {
       "BUCKET_NAME": "inda-storage-uploads",
-      "QUERY": "SELECT * from track_classification.track_labels_filtered LIMIT 5;"
-      
+      "QUERY": "SELECT * from track_classification.track_labels_filtered;",
+      "VALIDATION": "SELECT * FROM track_classification.track_labels_validation;"
     },
     "process_tracks": {
       "SAMPLE_DURATION": 10,
@@ -27,6 +40,9 @@
       "SILENCE_DURATION": 1,
       "SILENCE_PERCENTAGE": 0.3,
       "SAMPLE_PROPORTION": 1.0
+    },
+    "download_features": {  
+      "TRAINED_FEATURES": "our_extractor_features_with_brass.csv"
     }
   },
   "gcs": {

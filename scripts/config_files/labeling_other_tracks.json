@@ -13,6 +13,7 @@
   },
   "outputs": {
     "FEATURES": "features_with_brass.csv",
+    "VALIDATION_FEATURES": "validation_features.csv",
     "TRAIN_TEST_SPLITS": "random_split_with_brass"
   },
   "params": {
@@ -26,6 +27,9 @@
       "SILENCE_DURATION": 1,
       "SILENCE_PERCENTAGE": 0.3,
       "SAMPLE_PROPORTION": 1.0
+    },
+    "download_features": {
+      "TRAINED_FEATURES": "our_extractor_features_with_brass.csv"
     }
   },
   "gcs": {

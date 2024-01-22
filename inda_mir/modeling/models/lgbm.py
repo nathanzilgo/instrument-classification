@@ -22,3 +22,9 @@ class LightGBMClassifier(BaseModel):
 
     def get_params(self) -> dict:
         return self.model.get_params()
+
+    def set_params(self, **kwargs) -> None:
+        self.model.set_params(**kwargs)
+
+    def set_name(self, name: str) -> None:
+        self.name = name

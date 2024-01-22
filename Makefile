@@ -69,6 +69,9 @@ split:
 gcs:
 	python scripts/gcs_interface.py
 
+retrain:
+	python scripts/retrain_model.py
+
 ## Applications
 
 run_manual_classifier:

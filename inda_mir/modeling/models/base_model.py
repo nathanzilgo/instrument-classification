@@ -70,7 +70,7 @@ class BaseModel(ABC):
             for i in range(len(feature_importances))
         }
 
-    def save_model(self, path, model_name) -> dict:
+    def save_model(self, path, model_name) -> None:
         pickle.dump(self, open(os.path.join(path, model_name) + '.pkl', 'wb'))
         json.dump(
             self.get_params(),

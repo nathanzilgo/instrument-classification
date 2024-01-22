@@ -16,10 +16,9 @@ from inda_mir.utils import pow2db, squeeze_range
 
 class EssentiaExtractor(FeatureExtractor):
     """
-    This class computes a feature extraction using the Essentia's Freesound Extractor for a file.
-    The details about these features can be seen in the provided link.
-
-    @see https://essentia.upf.edu/freesound_extractor.html
+    This class computes feature extractions using the Essentia's low-level Algorithms for a file.
+    List of algorithms reference:
+    https://essentia.upf.edu/algorithms_reference.html
     """
 
     def __init__(self) -> None:

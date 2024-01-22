@@ -170,10 +170,13 @@ cython_debug/
 # Train/Test splits
 *.data
 *.zip
+*.npy
 
 # Saved models
-models/*.pkl
+*.pkl
 models/*.json
 *.checkpoint
 notebooks/random_split.data
 nohup.out
+flaml_best_params.txt
+

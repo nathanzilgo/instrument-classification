@@ -2,12 +2,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from sklearn.metrics import (
+    auc,
     confusion_matrix,
     classification_report,
     accuracy_score,
     recall_score,
     precision_score,
     f1_score,
+    roc_curve,
 )
 
 from typing import Dict, List
@@ -107,3 +109,44 @@ def plot_confusion_matrix(y_true, X_test, model, perc=True) -> None:
 
 def print_classification_report(y_true, y_pred, labels=None) -> None:
     print(classification_report(y_true, y_pred, labels=labels))
+
+
+def plot_model_comparison(model1, model2, X_test, y_test):
+    # Evaluate models
+    metrics_model1 = evaluate_model(model1, X_test, y_test)
+    metrics_model2 = evaluate_model(model2, X_test, y_test)
+
+    # Extract metric names
+    metric_names = ['Accuracy', 'Precision', 'Recall', 'F1 Score']
+
+    # Plot the bar graph
+    bar_width = 0.35
+    index = np.arange(len(metric_names))
+
+    plt.bar(index, metrics_model1, bar_width, label=f'Model 1 {model1.name}')
+    plt.bar(
+        index + bar_width,
+        metrics_model2,
+        bar_width,
+        label=f'Model 2 {model2.name}',
+    )
+
+    plt.xlabel('Metrics')
+    plt.ylabel('Values')
+    plt.title('Comparison of Classification Models')
+    plt.xticks(index + bar_width / 2, metric_names)
+    plt.legend()
+    plt.show()
+
+
+def evaluate_model(model, X_test, y_test, threshold=0.7):
+    # Make predictions on the test set
+    y_pred = model.predict(X_test, threshold=threshold)
+
+    # Evaluate the model
+    accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred, average='macro')
+    recall = recall_score(y_test, y_pred, average='macro')
+    f1 = f1_score(y_test, y_pred, average='macro')
+
+    return accuracy, precision, recall, f1
