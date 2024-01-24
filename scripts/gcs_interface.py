@@ -4,6 +4,7 @@ import argparse
 from zipfile import ZipFile
 
 from scripts.util import zip_dir
+from scripts.util.artifact_type import ArtifactType
 from scripts.util.gcloud import upload_blob, download_blob
 from scripts.util.config import instrument_classification_config as icc
 
@@ -26,6 +27,38 @@ TYPES_TO_LOCAL_DIR = {
 }
 
 BUCKET_NAME = icc['gcs']['BUCKET_NAME']
+
+
+def upload_interface(artifact_type: ArtifactType, filename: str):
+    if artifact_type.value not in ['raw', 'samples', 'metadata']:
+        filepath = os.path.join(
+            TYPES_TO_LOCAL_DIR[artifact_type.value], filename
+        )
+        destination_path = os.path.join(
+            TYPES_TO_REMOTE_DIR[artifact_type.value], filename
+        )
+        if os.path.exists(filepath):
+            upload_blob(BUCKET_NAME, filepath, destination_path)
+    else:
+        file = zip_dir(TYPES_TO_LOCAL_DIR[artifact_type.value])
+        destination_path = os.path.join(
+            TYPES_TO_REMOTE_DIR[artifact_type.value], filename
+        )
+        upload_blob(BUCKET_NAME, file.name, destination_path)
+
+
+def download_interface(artifact_type: ArtifactType, filename: str):
+    source_path = os.path.join(
+        TYPES_TO_REMOTE_DIR[artifact_type.value], filename
+    )
+    filepath = os.path.join(TYPES_TO_LOCAL_DIR[artifact_type.value], filename)
+    download_blob(BUCKET_NAME, source_path, filepath)
+
+    if artifact_type.value in ['raw', 'samples', 'metadata']:
+        z = ZipFile(filepath)
+        z.extractall(TYPES_TO_LOCAL_DIR[artifact_type.value])
+        os.remove(filepath)
+
 
 if __name__ == '__main__':
 
@@ -52,29 +85,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.operation == 'upload':
-        if args.type not in ['raw', 'samples', 'metadata']:
-            filepath = os.path.join(
-                TYPES_TO_LOCAL_DIR[args.type], args.filename
-            )
-            destination_path = os.path.join(
-                TYPES_TO_REMOTE_DIR[args.type], args.filename
-            )
-            if os.path.exists(filepath):
-                upload_blob(BUCKET_NAME, filepath, destination_path)
-        else:
-            file = zip_dir(TYPES_TO_LOCAL_DIR[args.type])
-            destination_path = os.path.join(
-                TYPES_TO_REMOTE_DIR[args.type], args.filename
-            )
-            upload_blob(BUCKET_NAME, file.name, destination_path)
+        upload_interface(ArtifactType(args.type), args.filename)
     else:
-        source_path = os.path.join(
-            TYPES_TO_REMOTE_DIR[args.type], args.filename
-        )
-        filepath = os.path.join(TYPES_TO_LOCAL_DIR[args.type], args.filename)
-        download_blob(BUCKET_NAME, source_path, filepath)
-
-        if args.type in ['raw', 'samples', 'metadata']:
-            z = ZipFile(filepath)
-            z.extractall(TYPES_TO_LOCAL_DIR[args.type])
-            os.remove(filepath)
+        download_interface(ArtifactType(args.type), args.filename)
