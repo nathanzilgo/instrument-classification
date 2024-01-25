@@ -1,4 +1,4 @@
-import joblib
+import json
 import pandas as pd
 
 from inda_mir.loaders import load_data_partition
@@ -7,6 +7,7 @@ from inda_mir.modeling.models.lgbm import LightGBMClassifier
 # from inda_mir.modeling.models import load_model
 from inda_mir.modeling.train_test_split.cv_split import CVSplitter
 from sklearn.model_selection import GridSearchCV
+from scripts.util.fine_tuning_params import BestModelParams
 
 from scripts.util.config import instrument_classification_config as icc
 
@@ -62,9 +63,14 @@ gscv = GridSearchCV(
 print(gscv.best_params_)
 print(gscv.best_score_)
 
+bp = gscv.best_params_
+bp['best_score'] = gscv.best_score_
+
+best_model_params = BestModelParams.validate(bp)
+json_string = best_model_params.json()
+
 with open(FINE_TUNING_OUTPUT, 'w') as f:
-    f.write(str(gscv.best_params_))
-    f.write(str(gscv.best_score_))
+    json.dump(json_string, f, indent=4)
 
 model.set_params(**gscv.best_params_)
 

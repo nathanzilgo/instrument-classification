@@ -23,8 +23,8 @@
     "FEATURES_VALIDATION": "validation_features.csv",
     "FEATURES_TRAINED": "our_extractor_features_with_brass.csv",  
     "TRAIN_TEST_SPLITS": "random_split",
-    "FLAML_PARAMS": "flaml_best_params.txt",
-    "GRID_PARAMS": "grid_search_results.txt",
+    "FLAML_PARAMS": "flaml_best_params.json",
+    "GRID_PARAMS": "grid_search_results.json",
     "GRID_MODEL": "gbm_retrained_finetuned_gridsearch.pkl",
     "RETRAINED_MODEL": "lgbm_retrained_untuned.pkl"
   },

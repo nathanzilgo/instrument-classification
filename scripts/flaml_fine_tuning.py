@@ -1,8 +1,10 @@
+import json
 from flaml import AutoML
 
 import pandas as pd
 
 from scripts.util.config import instrument_classification_config as icc
+from scripts.util.flaml_tuning_params import FlamlTuningParams
 
 TRAINED_FEATURES = icc['outputs']['FEATURES_TRAINED']
 VALIDATION_FEATURES = icc['outputs']['FEATURES_VALIDATION']
@@ -44,6 +46,9 @@ automl.fit(
     **automl_settings
 )
 
+bc = automl.best_config
+bc['best_loss'] = automl.best_loss
+
 print('Best hyperparmeter config:', automl.best_config)
 print('Best auc on validation data: {0:.4g}'.format(1 - automl.best_loss))
 print(
@@ -53,6 +58,8 @@ print(
 )
 print(automl.model.estimator)
 
+flaml_tuning_params = FlamlTuningParams.validate(bc)
+json_string = flaml_tuning_params.json()
+
 with open(FINE_TUNING_OUTPUT, 'w') as f:
-    f.write(str(automl.best_config))
-    f.write(str(automl.best_loss))
+    json.dump(json_string, f, indent=4)
