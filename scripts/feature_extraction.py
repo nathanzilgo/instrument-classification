@@ -6,7 +6,7 @@ from inda_mir.modeling.feature_extractor import (
 
 from scripts.util.config import instrument_classification_config as icc
 
-OUTPUT_PATH = icc['outputs']['FEATURES']
+OUTPUT_PATH = icc['outputs']['FEATURES_EXTRACTED']
 SAMPLE_METADATA_PATH = icc['metadata']['PROCESSED_SAMPLES']
 
 
