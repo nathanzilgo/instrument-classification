@@ -150,6 +150,49 @@ def plot_confusion_matrix_tracklevel(
     plt.show()
 
 
+def plot_confusion_matrix_tracklevel(
+    model, predictions, y_test, features, threshold=0.7
+):
+    aux_dataset = features[['track_id']].copy()
+    aux_dataset['truth'] = y_test
+    aux_dataset['prediction'] = predictions
+
+    class_by_tracks = (
+        aux_dataset.groupby(['track_id'])
+        .agg(
+            {
+                'truth': 'min',
+                'prediction': lambda x: np.random.choice(x.mode(dropna=False)),
+            }
+        )
+        .reset_index()
+    )
+
+    labels = model.classes_
+    cm = confusion_matrix(
+        class_by_tracks['truth'].to_numpy(),
+        class_by_tracks['prediction'].to_numpy(),
+        labels=labels,
+    )[: len(labels) - 1]
+    cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+    plt.figure(figsize=(len(labels), len(labels)))
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt='.2%',
+        cmap='Blues',
+        xticklabels=labels,
+        yticklabels=labels[:-1],
+    )
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.title(
+        f'Confusion Matrix - {model.name}, Confidence: {threshold*100}%. Track level.'
+    )
+    plt.show()
+
+
 def print_classification_report(y_true, y_pred, labels=None) -> None:
     print(classification_report(y_true, y_pred, labels=labels))
 

@@ -1,5 +1,5 @@
-import json
 import pandas as pd
+import json
 
 from inda_mir.modeling.models.lgbm import LightGBMClassifier
 
