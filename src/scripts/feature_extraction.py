@@ -1,13 +1,12 @@
 import pandas as pd
 
-from inda_mir.modeling.feature_extractor import (
+from extraction.essentia_extractor import (
     EssentiaExtractor,
 )
+from settings import settings
 
-from scripts.util.config import instrument_classification_config as icc
-
-OUTPUT_PATH = icc['outputs']['FEATURES_EXTRACTED']
-SAMPLE_METADATA_PATH = icc['metadata']['PROCESSED_SAMPLES']
+OUTPUT_PATH = settings.OUTPUT_PATH
+SAMPLE_METADATA_PATH = settings.SAMPLE_OUTPUT_PATH
 
 
 def feature_extraction(
