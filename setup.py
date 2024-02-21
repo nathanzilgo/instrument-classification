@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 with open('requirements.txt') as f:
     install_requires = f.read().splitlines()
@@ -13,5 +13,5 @@ setup(
         'Programming Language :: Python :: 3.11'
     ],
     install_requires=install_requires,
-    python_requires='>=3.11'
+    # python_requires='>=3.11'
 )

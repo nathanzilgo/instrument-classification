@@ -1,5 +1,7 @@
 {
     "python.analysis.extraPaths": [
         "./src/operation"
-    ]
+    ],
+    "cmake.configureOnOpen": true,
+    "dotnet.defaultSolution": "disable"
 }
