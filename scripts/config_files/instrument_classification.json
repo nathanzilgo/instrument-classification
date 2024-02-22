@@ -31,8 +31,8 @@
   "params": {
     "download_tracks": {
       "BUCKET_NAME": "inda-storage-uploads",
-      "QUERY": "SELECT * from track_classification.track_labels_filtered;",
-      "VALIDATION": "SELECT * FROM track_classification.track_labels_validation;"
+      "QUERY": "SELECT * from track_classification.tracks_v2;",
+      "VALIDATION": "SELECT * FROM track_classification.tracks_test;"
     },
     "process_tracks": {
       "SAMPLE_DURATION": 10,

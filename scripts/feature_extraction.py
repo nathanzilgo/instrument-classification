@@ -3,8 +3,8 @@ import pandas as pd
 from inda_mir.modeling.feature_extractor import (
     EssentiaExtractor,
 )
-
 from scripts.util.config import instrument_classification_config as icc
+
 
 OUTPUT_PATH = icc['outputs']['FEATURES_EXTRACTED']
 SAMPLE_METADATA_PATH = icc['metadata']['PROCESSED_SAMPLES']
@@ -17,6 +17,10 @@ def feature_extraction(
     trained_features: pd.DataFrame = None,
 ) -> None:
     samples = pd.read_csv(metadata_path)
+    if retrain:
+        samples = samples[
+            ~samples['track_id'].isin(trained_features['track_id'])
+        ]
     feature_extractor = EssentiaExtractor()
     feature_extractor.extract(samples['sample_path'], output_path)
     features = pd.read_csv(output_path)
