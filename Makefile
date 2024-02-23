@@ -63,6 +63,12 @@ process_tracks:
 feature_extraction:
 	python scripts/feature_extraction.py
 
+fine_tune:
+	python scripts/fine_tuning.py
+
+flaml_fine_tune:
+	python scripts/flaml_fine_tuning.py
+
 split:
 	python scripts/train_test_split.py
 

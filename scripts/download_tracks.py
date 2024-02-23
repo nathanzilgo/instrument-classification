@@ -9,7 +9,7 @@ from scripts.util.config import instrument_classification_config as icc
 OUTPUT_DIR = icc['dirs']['RAW_TRACKS']
 METADATA_PATH = icc['metadata']['RAW_TRACKS']
 BUCKET_NAME = icc['params']['download_tracks']['BUCKET_NAME']
-QUERY = icc['params']['download_tracks']['QUERY']
+QUERY = icc['params']['download_tracks']['TRAIN']
 
 query_df = query_to_df(QUERY)
 

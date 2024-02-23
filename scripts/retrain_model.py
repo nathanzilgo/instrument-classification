@@ -17,7 +17,7 @@ from collections import Counter
 OUTPUT_DIR = icc['dirs']['RAW_TRACKS']
 METADATA_PATH = icc['metadata']['RAW_TRACKS']
 BUCKET_NAME = icc['params']['download_tracks']['BUCKET_NAME']
-QUERY = icc['params']['download_tracks']['QUERY']
+QUERY = icc['params']['download_tracks']['TRAIN']
 TRAINED_FEATURES = icc['params']['download_features']['TRAINED_FEATURES']
 
 TRAINED_FEATURES_PATH = os.path.join('output/features', TRAINED_FEATURES)
