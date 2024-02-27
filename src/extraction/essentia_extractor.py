@@ -7,11 +7,11 @@ from flatten_json import flatten
 import essentia.standard as essentia
 from essentia import Pool, isSilent
 
-from inda_mir.modeling.feature_extractor.feature_extractor import (
+from .feature_extractor import (
     FeatureExtractor,
 )
 
-from inda_mir.utils import pow2db, squeeze_range
+from utils import pow2db, squeeze_range
 
 
 class EssentiaExtractor(FeatureExtractor):

@@ -25,6 +25,12 @@ class Settings(BaseSettings):
     MAX_MESSAGES: int = 1
     SAMPLE_PROPORTION: float = 0.75
 
+    IRMAS_PATH: str = './IRMAS'
+    IRMAS_TRAIN_PATH: str = f'{IRMAS_PATH}/IRMAS-TrainingData'
+    IRMAS_TEST_PATH: str = f'{IRMAS_PATH}/test'
+
+    TRACKS_DIR: str = './tracks'
+
     class Config:
         env_file = '.env'
 

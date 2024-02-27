@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../Downloads/IRMAS"
+		},
+		{
+			"path": "../../Downloads/FSL10K"
+		}
+	],
+	"settings": {
+		"dotnet.defaultSolution": "disable"
+	}
+}
