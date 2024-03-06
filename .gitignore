@@ -12,6 +12,7 @@ build/
 develop-eggs/
 dist/
 output-inda/
+output/
 eggs/
 .eggs/
 lib/

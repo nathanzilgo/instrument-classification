@@ -5,6 +5,8 @@ from inda_mir.modeling.evaluation import (
     print_classification_report,
 )
 from inda_mir.modeling.models.lgbm import LightGBMClassifier
+from inda_mir.utils.gcs_interface import download_artifact, upload_artifact
+from inda_mir.utils.gcs_interface.artifact_type import ArtifactType
 from scripts.feature_extraction import feature_extraction
 from scripts.download_tracks import download_tracks
 from scripts.process_tracks import process_tracks
@@ -12,12 +14,10 @@ from scripts.process_tracks import process_tracks
 from scripts.util.gcloud import query_to_df
 from scripts.util.config import instrument_classification_config as icc
 
-from collections import Counter
-
 OUTPUT_DIR = icc['dirs']['RAW_TRACKS']
 METADATA_PATH = icc['metadata']['RAW_TRACKS']
 BUCKET_NAME = icc['params']['download_tracks']['BUCKET_NAME']
-QUERY = icc['params']['download_tracks']['TRAIN']
+TRACKS_QUERY = icc['params']['download_tracks']['TRACKS_QUERY']
 TRAINED_FEATURES = icc['params']['download_features']['TRAINED_FEATURES']
 
 TRAINED_FEATURES_PATH = os.path.join('output/features', TRAINED_FEATURES)
@@ -32,16 +32,15 @@ FEATURES_EXTRACTED = icc['outputs']['FEATURES_EXTRACTED']
 RETRAIN_OUTPUT_PATH = icc['dirs']['RETRAINED_MODEL']
 MODEL_OUTPUT_NAME = 'lgbm_retrained_untuned'
 
-query_df = query_to_df(QUERY)
+query_df = query_to_df(TRACKS_QUERY)
 
 # Download our latest features csv
 if not os.path.exists(TRAINED_FEATURES_PATH):
-    os.system(
-        f'python scripts/gcs_interface.py -o download -t features -f {TRAINED_FEATURES}'
+    download_artifact(
+        artifact_type=ArtifactType.FEATURES, filename=TRAINED_FEATURES
     )
 
 trained_features = pd.read_csv(f'./output/features/{TRAINED_FEATURES}')
-validation_features = pd.read_csv(VALIDATION_FEATURES)
 
 download_tracks(
     query_df,
@@ -53,25 +52,30 @@ download_tracks(
 )
 
 process_tracks(query_df)
+# TODO - Save these samples in a GCS bucket after the processing
 
 # Feature extraction using existing features csv
 trained_features = pd.read_csv(TRAINED_FEATURES_PATH)
 feature_extraction(retrain=True, trained_features=trained_features)
+upload_artifact(ArtifactType.FEATURES, TRAINED_FEATURES_PATH)
 
 # Train / test split
 features_extracted = pd.read_csv(FEATURES_EXTRACTED)
+# TODO - Put this split inside our split function
+train_features = features_extracted[features_extracted['dataset'] != 'test']
+validation_features = features_extracted[
+    features_extracted['dataset'] == 'test'
+]
 
-X_train = features_extracted.drop(
-    ['filename', 'frame', 'track_id', 'label'], axis=1
+X_train = train_features.drop(
+    ['filename', 'frame', 'track_id', 'label', 'dataset'], axis=1
 ).to_numpy()
-y_train = features_extracted['label'].to_numpy()
+y_train = train_features['label'].to_numpy()
 
 X_test = validation_features.drop(
-    ['filename', 'frame', 'track_id', 'label'], axis=1
+    ['filename', 'frame', 'track_id', 'label', 'dataset'], axis=1
 ).to_numpy()
 y_test = validation_features['label'].to_numpy()
-
-print(Counter(y_train))
 
 lgbm = LightGBMClassifier()
 lgbm.fit(X_train, y_train)
@@ -80,6 +84,7 @@ lgbm.save_model(
     path=RETRAIN_OUTPUT_PATH,
     model_name=MODEL_OUTPUT_NAME,
 )
+upload_artifact(ArtifactType.MODEL, RETRAIN_OUTPUT_PATH)
 
 # Show metrics
 print_classification_report(y_test, lgbm.predict(X_test, threshold=0.7))

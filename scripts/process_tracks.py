@@ -18,7 +18,7 @@ SILENCE_DURATION = icc['params']['process_tracks']['SILENCE_DURATION']
 SILENCE_PERCENTAGE = icc['params']['process_tracks']['SILENCE_PERCENTAGE']
 SAMPLE_PROPORTION = icc['params']['process_tracks']['SAMPLE_PROPORTION']
 
-tracks = pd.read_csv(TRACK_METADATA_PATH)[['track_id', 'label']]
+tracks = pd.read_csv(TRACK_METADATA_PATH)[['track_id', 'label', 'dataset']]
 
 
 def process_tracks(

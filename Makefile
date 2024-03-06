@@ -1,7 +1,7 @@
 # Formatting commands
 
 format:
-	python -m blue ./inda_mir ./scripts ./track_classifier_app ./models_showcase
+	python -m blue ./inda_mir ./scripts ./track_classifier_app ./models_showcase ./retrain_pipeline_pubsub
 
 check.format:
 	python -m blue ./inda_mir ./scripts ./track_classifier_app --check
