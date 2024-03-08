@@ -12,11 +12,8 @@ BUCKET_NAME = icc['params']['download_tracks']['BUCKET_NAME']
 TRACKS_QUERY = icc['params']['download_tracks']['TRACKS_QUERY']
 
 
-query_df = query_to_df(TRACKS_QUERY)
-
-
 def download_tracks(
-    query_df: pd.DataFrame = query_df,
+    query_df: pd.DataFrame,
     output_dir: str = OUTPUT_DIR,
     metadata_path: str = METADATA_PATH,
     bucket_name: str = BUCKET_NAME,
@@ -64,4 +61,4 @@ def download_tracks(
 
 
 if __name__ == '__main__':
-    download_tracks()
+    download_tracks(query_df=query_to_df(TRACKS_QUERY))

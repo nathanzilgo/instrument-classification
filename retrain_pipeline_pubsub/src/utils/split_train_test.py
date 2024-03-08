@@ -1,7 +1,10 @@
 import pandas as pd
 
+
 def split_train_test(features_extracted: pd.DataFrame):
-    train_features = features_extracted[features_extracted['dataset'] != 'test']
+    train_features = features_extracted[
+        features_extracted['dataset'] != 'test'
+    ]
     validation_features = features_extracted[
         features_extracted['dataset'] == 'test'
     ]
