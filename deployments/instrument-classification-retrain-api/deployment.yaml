@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: instrument-classification-retrain-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: instrument-classification-retrain-api
+  template:
+    metadata:
+      labels:
+        app: instrument-classification-retrain-api
+    spec:
+      containers:
+      - name: instrument-classification-retrain-api
+        image: us-central1-docker.pkg.dev/loyal-parser-316218/indaband/instrument-classification-retrain-api
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+          - name: PORT
+            value: "8080"
+          - name: APP_NAME
+            value: "instrument-classification-retrain-api"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+            ephemeral-storage: "1Gi"
+          limits:
+            memory: "2Gi"
+            cpu: "500m"
+            ephemeral-storage: "2Gi"
+      tolerations:
+        - key: cloud.google.com/gke-nodepool
+          operator: Equal
+          value: "instrument-classification-retrain-api"
+          effect: NoSchedule
+      serviceAccountName: "instrument-classification-retrain-sa"
+      nodeSelector:
+        "cloud.google.com/gke-nodepool": "instrument-classification-retrain-api"

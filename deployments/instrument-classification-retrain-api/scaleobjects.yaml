@@ -1,0 +1,29 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-gcp-credentials
+  namespace: instrument-classification-retrain-api
+spec:
+  podIdentity:
+    provider: gcp
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: instrument-classification-retrain-api
+  namespace: instrument-classification-retrain-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: instrument-classification-retrain-api
+  minReplicaCount:  0
+  maxReplicaCount:  100
+  triggers:
+    - type: gcp-pubsub
+      authenticationRef:
+        name: keda-trigger-auth-gcp-credentials
+      metadata:
+        mode: "SubscriptionSize"
+        value: "1"
+        subscriptionName: "projects/loyal-parser-316218/subscriptions/instrument-classification-retrain-api-requests-sub"

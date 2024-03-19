@@ -1,0 +1,101 @@
+# Default values for instrument-classification-retrain-api-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+apiVersion: configmanagement.gke.io/v1
+kind: NamespaceSelector
+metadata:
+  name: instrument-classification-retrain-api
+  namespace: instrument-classification-retrain-api
+spec:
+  selector:
+    matchLabels:
+      env: prod
+
+replicaCount: 1
+
+image:
+  repository: us-central1-docker.pkg.dev/loyal-parser-316218/indaband/instrument-classification-retrain-api
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "instrument-classification-retrain-api"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations:
+    iam.gke.io/gcp-service-account: track-classifier-retrain-sa@loyal-parser-316218.iam.gserviceaccount.com
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "instrument-classification-retrain-sa"
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+livenessProbe: {}
+
+readinessProbe: {}
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  requests:
+    memory: "1Gi"
+    cpu: "500m"
+    ephemeral-storage: "1Gi"
+  limits:
+    memory: "2Gi"
+    cpu: "500m"
+    ephemeral-storage: "2Gi"
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+tolerations:
+  - key: cloud.google.com/gke-nodepool
+    operator: Equal
+    value: "instrument-classification-retrain-api"
+    effect: NoSchedule
+  - key: cloud.google.com/gke-preemptible
+    operator: Equal
+    value: "true"
+    effect: NoSchedule
+
+nodeSelector:
+  "cloud.google.com/gke-nodepool": "instrument-classification-retrain-api"
+
+affinity: {}
+
+scaledObject:
+  minReplicaCount: 0
+  maxReplicaCount: 100
+  slotCount: 1
+  subscriptionName: "projects/loyal-parser-316218/subscriptions/instrument-classification-retrain-requests-sub"
