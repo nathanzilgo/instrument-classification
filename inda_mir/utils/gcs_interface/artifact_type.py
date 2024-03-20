@@ -8,3 +8,4 @@ class ArtifactType(Enum):
     TTS = 'tts'
     METADATA = 'metadata'
     MODEL = 'model'
+    METRICS = 'metrics'

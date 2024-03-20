@@ -1,4 +1,7 @@
+from datetime import datetime
+import os
 import matplotlib.pyplot as plt
+import pandas as pd
 import seaborn as sns
 import numpy as np
 from sklearn.metrics import (
@@ -151,8 +154,8 @@ def plot_confusion_matrix_tracklevel(
 
 
 def plot_confusion_matrix_tracklevel(
-    model, predictions, y_test, features, threshold=0.7
-):
+    model, predictions, y_test, features, threshold=0.7, metrics_path=''
+) -> str:
     aux_dataset = features[['track_id']].copy()
     aux_dataset['truth'] = y_test
     aux_dataset['prediction'] = predictions
@@ -190,11 +193,46 @@ def plot_confusion_matrix_tracklevel(
     plt.title(
         f'Confusion Matrix - {model.name}, Confidence: {threshold*100}%. Track level.'
     )
-    plt.show()
+    if metrics_path != '':
+        if not os.path.exists(metrics_path):
+            os.makedirs(metrics_path, exist_ok=True)
+
+        filename = (
+            f'confusion_matrix_{datetime.now().strftime("%H_%M_%S_%d_%m_%Y")}'
+        )
+        metrics_path = os.path.join(
+            metrics_path,
+            filename,
+        )
+        plt.savefig(metrics_path)
+
+        return filename
+    else:
+        plt.show()
 
 
-def print_classification_report(y_true, y_pred, labels=None) -> None:
-    print(classification_report(y_true, y_pred, labels=labels))
+def print_classification_report(
+    y_true, y_pred, labels=None, metrics_path=''
+) -> str:
+    if metrics_path == '':
+        print(classification_report(y_true, y_pred, labels=labels))
+    else:
+        if not os.path.exists(metrics_path):
+            os.makedirs(metrics_path, exist_ok=True)
+
+        cr = classification_report(
+            y_true, y_pred, labels=labels, output_dict=True
+        )
+        cd_dataframe = pd.DataFrame(cr).transpose()
+
+        filename = f'classification_report_{datetime.now().strftime("%H_%M_%S_%d_%m_%Y")}.csv'
+        metrics_path = os.path.join(
+            metrics_path,
+            filename,
+        )
+        cd_dataframe.to_csv(metrics_path)
+
+        return filename
 
 
 def plot_model_comparison(model1, model2, X_test, y_test):

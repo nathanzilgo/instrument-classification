@@ -6,9 +6,10 @@ class Settings(BaseSettings):
     PROJECT_ID: str = 'loyal-parser-316218'
     TRACKS_OUTPUT_DIR: str = './output/raw_tracks'
     TRACKS_METADATA_PATH: str = './output/metadata/tracks.csv'
+    METRICS_OUTPUT_PATH: str = './output/metrics'
     BUCKET_NAME: str = 'inda-storage-uploads'
     TRACKS_QUERY: str = 'SELECT * FROM `loyal-parser-316218.track_classification.user_corrected_labels`;'
-    TRAINED_FEATURES: str = 'validation_features.csv'
+    TRAINED_FEATURES: str = 'essentia_features.csv'
     TRAINED_FEATURES_PATH: str = os.path.join(
         'output/features', TRAINED_FEATURES
     )

@@ -12,6 +12,7 @@
     "FLAML_PARAMS": "fine_tuning",
     "GRID_PARAMS": "fine_tuning",
     "GRID_MODEL": "models",
+    "METRICS": "metrics",
     "RETRAINED_MODEL": "models"
   },
   "metadata": {

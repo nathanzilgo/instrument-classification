@@ -12,6 +12,7 @@ TYPES_TO_REMOTE_DIR = {
     'tts': 'train_test_splits',
     'model': 'models',
     'metadata': 'metadata',
+    'metrics': 'metrics',
 }
 
 TYPES_TO_LOCAL_DIR = {
@@ -20,7 +21,8 @@ TYPES_TO_LOCAL_DIR = {
     'features': icc['dirs']['FEATURES'],
     'tts': icc['dirs']['TRAIN_TEST_SPLITS'],
     'metadata': icc['dirs']['METADATA'],
-    'model': './models',
+    'model': icc['dirs']['GRID_MODEL'],
+    'metrics': icc['dirs']['METRICS'],
 }
 
 BUCKET_NAME = icc['gcs']['BUCKET_NAME']

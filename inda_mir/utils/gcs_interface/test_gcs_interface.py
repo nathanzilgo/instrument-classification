@@ -40,7 +40,7 @@ def test_upload_models_artifact(
     upload_blob_mock.assert_called_once()
     upload_blob_mock.assert_called_once_with(
         'inda-mir-samples',
-        './models/test_destination',
+        './output/models/test_destination',
         'models/test_destination',
     )
 
@@ -186,7 +186,7 @@ def test_download_model_artifact(
     download_blob_mock.assert_called_once_with(
         'inda-mir-samples',
         'models/test_source',
-        './models/test_source',
+        './output/models/test_source',
     )
     zipfile_mock.extractall.assert_not_called()
 

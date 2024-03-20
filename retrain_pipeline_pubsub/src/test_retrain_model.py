@@ -1,3 +1,4 @@
+import datetime
 from unittest import mock
 
 import pandas as pd
@@ -35,12 +36,25 @@ def test_download_cached_data(
     )
 
 
+@mock.patch('retrain_pipeline_pubsub.src.retrain_model.datetime')
+@mock.patch(
+    'retrain_pipeline_pubsub.src.retrain_model.plot_confusion_matrix_tracklevel'
+)
+@mock.patch(
+    'retrain_pipeline_pubsub.src.retrain_model.print_classification_report'
+)
 @mock.patch('retrain_pipeline_pubsub.src.retrain_model.LightGBMClassifier')
 @mock.patch('retrain_pipeline_pubsub.src.retrain_model.upload_artifact')
 def test_train_new_model(
     upload_artifact_mock: mock.Mock,
     lgbm_mock: mock.Mock,
+    cr_mock: mock.Mock,
+    cm_mock: mock.Mock,
+    date_mock: mock.Mock,
 ) -> None:
+    date_mock.now.return_value = datetime.datetime(2023, 2, 1, 10, 9, 8)
+    cr_mock.return_value = 'classification_report'
+    cm_mock.return_value = 'confusion_matrix'
     trained_features = pd.DataFrame(
         {
             'filename': ['file1', 'file2', 'file3'],
@@ -53,11 +67,19 @@ def test_train_new_model(
 
     train_new_model(trained_features)
 
-    upload_artifact_mock.assert_called_once_with(
-        ArtifactType.MODEL, settings.RETRAIN_OUTPUT_PATH
+    upload_artifact_mock.assert_has_calls(
+        [
+            mock.call(ArtifactType.METRICS, 'confusion_matrix.png'),
+            mock.call(ArtifactType.METRICS, 'classification_report'),
+            mock.call(
+                ArtifactType.MODEL, 'lgbm_retrained_10_09_08_01_02_2023.pkl'
+            ),
+        ],
     )
     lgbm_mock.return_value.fit.assert_called_once()
     lgbm_mock.return_value.save_model.assert_called_once_with(
         path=settings.RETRAIN_OUTPUT_PATH,
-        model_name=settings.MODEL_OUTPUT_NAME,
+        model_name='lgbm_retrained_10_09_08_01_02_2023',
     )
+    cr_mock.assert_called_once()
+    cm_mock.assert_called_once()
