@@ -1,0 +1,9 @@
+steps:
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    args:
+      - --destination=${_CONTAINER_REPO}/${_SERVICE_NAME}:v${_SHA1}
+      - --destination=${_CONTAINER_REPO}/${_SERVICE_NAME}:latest
+      - --cache=true
+      - --cache-ttl=24h
+      - --compressed-caching=false
+      - --cache-copy-layers=true

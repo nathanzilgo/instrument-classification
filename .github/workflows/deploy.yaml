@@ -1,0 +1,67 @@
+name: Deploy
+
+on: workflow_dispatch
+
+concurrency:
+    group: ${{ github.ref }}
+    cancel-in-progress: true
+
+env:
+    APP_NAME: instrument-classification-retrain-api
+
+jobs:
+    deploy:
+        permissions:
+          contents: 'read'
+          id-token: 'write'
+
+        name: Deploy
+        runs-on: ubuntu-latest
+        # if: github.event.pull_request.merged == true
+
+        steps:
+            - uses: actions/checkout@v3
+            
+            - name: Authenticate to Google Cloud
+              id: auth
+              uses: google-github-actions/auth@v2
+              with:
+                workload_identity_provider: ${{ vars.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+                service_account: ${{ vars.GCLOUD_GITHUB_CI_SERVICE_ACCOUNT_EMAIL }}
+
+            - name: Set up Google Cloud SDK
+              uses: google-github-actions/setup-gcloud@v1
+              with:
+                project_id: ${{ vars.GCLOUD_PROJECT_ID }}
+                install_components: 'gsutil, beta, kubectl'
+
+            - name: Configure Project & Region
+              run: |
+                gcloud config set project ${{ vars.GCLOUD_PROJECT_ID }}
+                gcloud config set run/region ${{ vars.GCLOUD_REGION }}
+
+            - name: Configure Kubectl
+              id: get-credentials
+              uses: google-github-actions/get-gke-credentials@v2
+              with:
+                cluster_name: ${{ vars.GCLOUD_GKE_CLUSTER_NAME }}
+                location: ${{ vars.GCLOUD_REGION }}
+
+            - name: Install Helm
+              uses: azure/setup-helm@v3
+              with:
+                version: 'v3.14.0'
+            
+            - name: Build & Publish
+              timeout-minutes: 360
+              run: |
+                gcloud config set builds/use_kaniko True
+                gcloud config set builds/kaniko_cache_ttl 86400
+                gcloud builds submit --substitutions _CONTAINER_REPO=${{ vars.GCLOUD_ARTIFACT_CONTAINER_REGISTRY_REPO }},_SERVICE_NAME=${{ env.APP_NAME }},_SHA1=${{ github.sha }}
+            
+            - name: Deploy to Kubernetes
+              run: |
+                helm upgrade --install ${{ env.APP_NAME }} ./deployments/${{ env.APP_NAME }} \
+                --reset-values \
+                --namespace ${{ env.APP_NAME }} \
+                --set image.repository=${{ vars.GCLOUD_ARTIFACT_CONTAINER_REGISTRY_REPO }}/${{ env.APP_NAME }},image.tag=v${{ github.sha }}

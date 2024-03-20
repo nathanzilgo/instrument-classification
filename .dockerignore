@@ -1,0 +1,13 @@
+.DS_Store
+.dockerignore
+.git
+.gitignore
+/.github
+/.vscode
+/Dockerfile
+-.env
+/output
+*.egg-info
+.venv
+*.mypy
+*.out
