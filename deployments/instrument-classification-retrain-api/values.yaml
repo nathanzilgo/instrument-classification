@@ -2,16 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-apiVersion: configmanagement.gke.io/v1
-kind: NamespaceSelector
-metadata:
-  name: instrument-classification-retrain-api
-  namespace: instrument-classification-retrain-api
-spec:
-  selector:
-    matchLabels:
-      env: prod
-
 replicaCount: 1
 
 image:
@@ -26,10 +16,10 @@ fullnameOverride: "instrument-classification-retrain-api"
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: false
+  create: true
   # Annotations to add to the service account
   annotations:
-    iam.gke.io/gcp-service-account: track-classifier-retrain-sa@loyal-parser-316218.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: instrument-class-retrain-sa@loyal-parser-316218.iam.gserviceaccount.com
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: "instrument-classification-retrain-sa"
@@ -84,10 +74,7 @@ tolerations:
     operator: Equal
     value: "instrument-classification-retrain-api"
     effect: NoSchedule
-  - key: cloud.google.com/gke-preemptible
-    operator: Equal
-    value: "true"
-    effect: NoSchedule
+
 
 nodeSelector:
   "cloud.google.com/gke-nodepool": "instrument-classification-retrain-api"
@@ -96,6 +83,6 @@ affinity: {}
 
 scaledObject:
   minReplicaCount: 0
-  maxReplicaCount: 100
+  maxReplicaCount: 1
   slotCount: 1
   subscriptionName: "projects/loyal-parser-316218/subscriptions/instrument-classification-retrain-requests-sub"
