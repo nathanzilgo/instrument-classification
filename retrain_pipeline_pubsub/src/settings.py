@@ -16,10 +16,13 @@ class Settings(BaseSettings):
     FEATURES_EXTRACTED: str = 'essentia_extracted_features.csv'
     RETRAIN_OUTPUT_PATH: str = './output/models'
     MODEL_OUTPUT_NAME: str = 'lgbm_retrained_untuned'
-    UP_SUBSCRIPTION_ID: str = (
-        'instrument-classifier-model-retrain-scale-up-sub'
+    PUBSUB_START_TOPIC_ID: str = (
+        'instrument-classification-retrain-api-start-retrain'
     )
-    FINISH_TOPIC_ID: str = 'instrument-classifier-model-retrain-notify-finish'
+    PUBSUB_UP_TOPIC_ID: str = 'instrument-classification-retrain-api-scale-up'
+    PUBSUB_FINISH_TOPIC_ID: str = (
+        'instrument-classification-retrain-api-notify-completed'
+    )
     MAX_MESSAGES: int = 1
     UNBALANCE_THRESHOLD: float = 0.3
     SAVE_EXTRACTED_TRACKS_QUERY: str = 'INSERT INTO `loyal-parser-316218.track_classification.track_labels_datasets` (track_id, audio_url, label, dataset) VALUES '

@@ -30,7 +30,7 @@ def process_retraining(message: Any) -> None:
 
         publisher = pubsub.PublisherClient()
         topic_path = publisher.topic_path(
-            settings.PROJECT_ID, settings.FINISH_TOPIC_ID
+            settings.PROJECT_ID, settings.PUBSUB_FINISH_TOPIC_ID
         )
 
         future = publisher.publish(
@@ -43,7 +43,7 @@ def process_retraining(message: Any) -> None:
             )
             subscribe(
                 callback=ack_up_message,
-                subscription_id=settings.UP_SUBSCRIPTION_ID,
+                subscription_id=settings.PUBSUB_UP_TOPIC_ID,
             )
 
     except Exception as e:
@@ -71,3 +71,10 @@ def subscribe(callback: Callable[[Any], Any], subscription_id: str) -> None:
             streaming_pull_future.result()
         except TimeoutError:
             streaming_pull_future.cancel()
+
+
+if __name__ == '__main__':
+    subscribe(
+        callback=process_retraining,
+        subscription_id=settings.PUBSUB_START_SUBSCRIPTION_ID,
+    )
