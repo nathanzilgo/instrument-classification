@@ -30,7 +30,7 @@ def save_extracted_tracks(query_df: pd.DataFrame) -> None:
     query = settings.SAVE_EXTRACTED_TRACKS_QUERY
 
     for i in range(len(query_df)):
-        query += f'({query_df["track_id"][i]}, {query_df["audio_url"][i]}, {query_df["label"][i]}, {query_df["dataset"][i]})'
+        query += f'("{query_df["track_id"][i]}", "{query_df["audio_url"][i]}", "{query_df["label"][i]}", "{query_df["dataset"][i]}")'
 
         if i < len(query_df) - 1:
             query += ', '

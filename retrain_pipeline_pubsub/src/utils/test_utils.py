@@ -49,10 +49,27 @@ def test_save_extracted_tracks(client_mock: mock.Mock):
     save_extracted_tracks(df)
 
     expected_query = (
-        f'{settings.SAVE_EXTRACTED_TRACKS_QUERY}(1, url1, A, train);'
+        f'{settings.SAVE_EXTRACTED_TRACKS_QUERY}("1", "url1", "A", "train");'
     )
     client_mock.return_value.query.assert_called_once_with(expected_query)
 
+@mock.patch('retrain_pipeline_pubsub.src.utils.bigquery.Client')
+def test_save_extracted_tracks_multiple_tracks(client_mock: mock.Mock):
+    df = pd.DataFrame(
+        {
+            'track_id': [1, 2],
+            'audio_url': ['url1', 'url2'],
+            'label': ['A', 'B'],
+            'dataset': ['train', 'test'],
+        }
+    )
+
+    save_extracted_tracks(df)
+
+    expected_query = (
+        f'{settings.SAVE_EXTRACTED_TRACKS_QUERY}("1", "url1", "A", "train"), ("2", "url2", "B", "test");'
+    )
+    client_mock.return_value.query.assert_called_once_with(expected_query)
 
 @mock.patch('random.randint')
 def test_sort_dataset_train(random_mock: mock.Mock):
