@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     PUBSUB_FINISH_TOPIC_ID: str = (
         'instrument-classification-retrain-api-notify-completed'
     )
+    PUBSUB_START_SUB_ID: str = 'instrument-classification-retrain-api-start-retrain-sub'
+    PUBSUB_UP_SUB_ID: str = 'instrument-classification-retrain-api-scale-up-sub'
     MAX_MESSAGES: int = 1
     UNBALANCE_THRESHOLD: float = 0.3
     SAVE_EXTRACTED_TRACKS_QUERY: str = 'INSERT INTO `loyal-parser-316218.track_classification.track_labels_datasets` (track_id, audio_url, label, dataset) VALUES '

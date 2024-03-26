@@ -28,23 +28,10 @@ def process_retraining(message: Any) -> None:
         retrain_model()
         logging.info('Model retrained successfuly!')
 
-        publisher = pubsub.PublisherClient()
-        topic_path = publisher.topic_path(
-            settings.PROJECT_ID, settings.PUBSUB_FINISH_TOPIC_ID
+        subscribe(
+            callback=ack_up_message,
+            subscription_id=settings.PUBSUB_UP_SUB_ID,
         )
-
-        future = publisher.publish(
-            topic_path, Response().json().encode('utf-8')
-        )
-
-        if future.result():
-            logging.info(
-                f'Published the results to "{topic_path}". Now finishing the pipeline'
-            )
-            subscribe(
-                callback=ack_up_message,
-                subscription_id=settings.PUBSUB_UP_TOPIC_ID,
-            )
 
     except Exception as e:
         logging.info(f'>>>> EXCEPTION, {e}')
@@ -76,5 +63,5 @@ def subscribe(callback: Callable[[Any], Any], subscription_id: str) -> None:
 if __name__ == '__main__':
     subscribe(
         callback=process_retraining,
-        subscription_id=settings.PUBSUB_START_SUBSCRIPTION_ID,
+        subscription_id=settings.PUBSUB_START_SUB_ID,
     )

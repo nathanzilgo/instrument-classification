@@ -22,7 +22,7 @@ serviceAccount:
     iam.gke.io/gcp-service-account: instrument-class-retrain-sa@loyal-parser-316218.iam.gserviceaccount.com
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: "instrument-classification-retrain-sa"
+  name: "instrument-classification-retrain-api"
 
 podAnnotations: {}
 podLabels: {}
@@ -52,9 +52,9 @@ resources:
     cpu: "500m"
     ephemeral-storage: "1Gi"
   limits:
-    memory: "2Gi"
+    memory: "1Gi"
     cpu: "500m"
-    ephemeral-storage: "2Gi"
+    ephemeral-storage: "1Gi"
 
 # Additional volumes on the output Deployment definition.
 volumes: []
@@ -82,7 +82,7 @@ nodeSelector:
 affinity: {}
 
 scaledObject:
-  minReplicaCount: 0
+  minReplicaCount: 1
   maxReplicaCount: 1
   slotCount: 1
-  subscriptionName: "projects/loyal-parser-316218/subscriptions/instrument-classification-retrain-requests-sub"
+  subscriptionName: "projects/loyal-parser-316218/subscriptions/instrument-classification-retrain-api-scale-up-sub"
