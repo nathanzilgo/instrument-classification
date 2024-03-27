@@ -34,7 +34,7 @@ def retrain_model() -> None:
 
     trained_features = pd.read_csv(settings.TRAINED_FEATURES_PATH)
     feature_extraction(retrain=True, trained_features=trained_features)
-    upload_artifact(ArtifactType.FEATURES, settings.TRAINED_FEATURES_PATH)
+    upload_artifact(ArtifactType.FEATURES, settings.TRAINED_FEATURES)
 
     save_extracted_tracks(query_df)
     if is_unbalanced(train_features=trained_features):
