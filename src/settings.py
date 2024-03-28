@@ -31,6 +31,8 @@ class Settings(BaseSettings):
 
     TRACKS_DIR: str = './tracks'
 
+    MODEL_NAME: str = 'models_lgbm_oe_rs_27102023.pkl'
+
     class Config:
         env_file = '.env'
 

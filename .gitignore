@@ -10,3 +10,9 @@ instrument_classification.egg-info/PKG-INFO
 instrument_classification.egg-info/SOURCES.txt
 instrument_classification.egg-info/top_level.txt
 .vscode/settings.json
+*.pyc
+instrument-classification.code-workspace
+*-workspace
+*test*
+LightGBM/
+*.pkl

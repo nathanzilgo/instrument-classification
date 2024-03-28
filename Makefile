@@ -1,13 +1,13 @@
 # Formatting commands
 
 format:
-	python -m blue ./inda_mir ./scripts ./track_classifier_app ./models_showcase
+	python -m blue ./mir ./scripts ./track_classifier_app ./models_showcase
 
 check.format:
-	python -m blue ./inda_mir ./scripts ./track_classifier_app --check
+	python -m blue ./mir ./scripts ./track_classifier_app --check
 
 lint:
-	python -m pyflakes ./inda_mir ./scripts ./track_classifier_app
+	python -m pyflakes ./mir ./scripts ./track_classifier_app
 
 # Testing commands
 

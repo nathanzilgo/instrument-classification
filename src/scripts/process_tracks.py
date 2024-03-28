@@ -2,12 +2,11 @@ import os
 import pandas as pd
 import tqdm
 
-from inda_mir.processing_pipelines import sample_and_filter_silence
+from mir.processing_pipelines import sample_and_filter_silence
+from settings import settings
 
-from scripts.util.config import instrument_classification_config as icc
-
-TRACKS_DIR = icc['dirs']['RAW_TRACKS']
-OUTPUT_DIR = icc['dirs']['PROCESSED_SAMPLES']
+TRACKS_DIR = settings.TRACKS_DIR
+OUTPUT_DIR = settings.SAMPLE_OUTPUT_PATH
 
 TRACK_METADATA_PATH = icc['metadata']['RAW_TRACKS']
 SAMPLE_METADATA_PATH = icc['metadata']['PROCESSED_SAMPLES']
