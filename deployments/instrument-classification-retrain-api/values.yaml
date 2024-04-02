@@ -82,7 +82,7 @@ nodeSelector:
 affinity: {}
 
 scaledObject:
-  minReplicaCount: 1
+  minReplicaCount: 0
   maxReplicaCount: 1
   slotCount: 1
   subscriptionName: "projects/loyal-parser-316218/subscriptions/instrument-classification-retrain-api-scale-up-sub"
