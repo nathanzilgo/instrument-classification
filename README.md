@@ -27,7 +27,7 @@ This Dataset has 4 types of classes .
 
 In Test Set Total 80 audio files are present , 20 From Each Class.
 
-1. For this dataset, we can test our inda mir model removing bass and brass classes and evaluate both on their train data and test data.
+1. For this dataset, we can test our private mir model removing bass and brass classes and evaluate both on their train data and test data.
 2. Also testing our model with their data and compare the results, testing both on their test data and our test data
 
 ## Freesound Loop Dataset Experiments (discarded for now)

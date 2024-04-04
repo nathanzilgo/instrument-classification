@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 
 class CVSplitter:
     """
-    Inda Mir Cross-Validation Splitter.
+    Cross-Validation Splitter.
     """
 
     def __init__(self, n_splits):
