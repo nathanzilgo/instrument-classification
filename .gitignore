@@ -1,14 +1,5 @@
-src/instrument_classification.egg-info/dependency_links.txt
-src/instrument_classification.egg-info/PKG-INFO
-src/instrument_classification.egg-info/requires.txt
-src/instrument_classification.egg-info/SOURCES.txt
-src/instrument_classification.egg-info/top_level.txt
 .vscode/settings.json
-instrument_classification.egg-info/dependency_links.txt
-instrument_classification.egg-info/requires.txt
-instrument_classification.egg-info/PKG-INFO
-instrument_classification.egg-info/SOURCES.txt
-instrument_classification.egg-info/top_level.txt
+*.egg-info
 .vscode/settings.json
 *.pyc
 instrument-classification.code-workspace
@@ -16,3 +7,7 @@ instrument-classification.code-workspace
 *test*
 LightGBM/
 *.pkl
+pyvenv.cfg
+Lib/
+venv/
+Scripts/
