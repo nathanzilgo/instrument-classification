@@ -13,7 +13,7 @@ def sample_and_filter_silence(
     silence_duration,
     silence_percentage,
     sample_proportion=1.0,
-    keep_trace=False,
+    keep_trace=True,
 ):
 
     if not os.path.exists(output_dir):

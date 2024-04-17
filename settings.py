@@ -21,9 +21,9 @@ class Settings(BaseSettings):
     SILENCE_THRESHOLD: int = -45
     SILENCE_DURATION: int = 1
     SILENCE_PERCENTAGE: float = 0.3
-    PREDICT_THRESHOLD: float = 0.7
+    PREDICT_THRESHOLD: float = 0.5
     MAX_MESSAGES: int = 1
-    SAMPLE_PROPORTION: float = 0.75
+    SAMPLE_PROPORTION: float = 1
 
     IRMAS_PATH: str = './IRMAS'
     IRMAS_TRAIN_PATH: str = f'{IRMAS_PATH}/IRMAS-TrainingData'

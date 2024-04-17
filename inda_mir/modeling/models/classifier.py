@@ -30,7 +30,7 @@ class InstrumentClassifier:
     def classify(self, filename: str) -> ClassifiedInstrument:
         print(filename)
         print(filename.split('/')[-1].split('.'))
-        track_id, input_format = filename.split('/')[-1].split('.')
+        track_id, input_format = self.remove_dots_preserve_extension(filename)
 
         if not os.path.exists(filename):
             raise FileNotFoundError(f'File {filename} not found.')
@@ -72,3 +72,22 @@ class InstrumentClassifier:
         logger.info(f'Classified "{track_id}" as "{label}"!')
 
         return ClassifiedInstrument(source_id=track_id, instrument=label)
+
+    def remove_dots_preserve_extension(self, filename):
+        """Removes all periods ('.') except for the file extension.
+
+        Args:
+            filename: The filename to be processed.
+
+        Returns:
+            The new filename with dots removed.
+        """
+
+        parts = filename.split('.')
+        if len(parts) > 1:
+            extension = parts[-1]
+            no_dot_name = "".join(part for part in parts[:-1])
+        else:
+            extension = parts[-1]
+            no_dot_name = filename
+        return no_dot_name, extension
