@@ -29,8 +29,8 @@ class InstrumentClassifier:
 
     def classify(self, filename: str) -> ClassifiedInstrument:
         print(filename)
-        print(filename.split('/')[-1].split('.'))
         track_id, input_format = self.remove_dots_preserve_extension(filename)
+        print(track_id, input_format)
 
         if not os.path.exists(filename):
             raise FileNotFoundError(f'File {filename} not found.')
@@ -83,11 +83,11 @@ class InstrumentClassifier:
             The new filename with dots removed.
         """
 
-        parts = filename.split('.')
+        parts = filename.split('/')[-1].split('.')
         if len(parts) > 1:
             extension = parts[-1]
             no_dot_name = "".join(part for part in parts[:-1])
         else:
             extension = parts[-1]
-            no_dot_name = filename
-        return no_dot_name, extension
+            no_dot_name = parts[0]
+        return [no_dot_name, extension]
