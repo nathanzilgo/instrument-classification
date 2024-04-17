@@ -23,5 +23,5 @@ wordcloud==1.9.2
 shap==0.42.1
 google_cloud_storage==2.11.0
 ffmpeg-python==0.2.0
-essentia==2.1b6.dev1110; sys_platform=="linux"
+essentia
 flaml==2.1.1 

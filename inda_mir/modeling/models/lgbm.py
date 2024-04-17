@@ -28,3 +28,6 @@ class LightGBMClassifier(BaseModel):
 
     def set_name(self, name: str) -> None:
         self.name = name
+
+    def get_n_features(self) -> int:
+        return len(self._get_feature_importance())
